@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+<div class="card p-5 m-5 w-75 mx-auto" id="health-valuable">
+    <form method="POST" id="healthForm" enctype="multipart/form-data">
+         <div id="healthInfo"
+                 data-health-info="{{ healthInfo }}"></div>
+        {{ form.csrf_token }}
+         <div class="row">
+            <div class="col-1 my-auto">{{ form.type.label }}</div>
+            <div class="col-11">{{ form.type(class='form-control', disabled=true) }}</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-1 my-auto">{{ form.title.label }}</div>
+            <div class="col-11">{{ form.title(class='form-control', disabled=is_view) }}</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-1 my-auto">{{ form.auth.label }}</div>
+            <div class="col-11">{{ form.auth(class='form-control', disabled=is_view) }}</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-1">{{ form.image.label }}</div>
+            <div class="col-11">
+                <input
+                        id="cover-image-id"
+                        name="cover-image-id[]"
+                        type="file"
+                        accept="image/*"
+                        class="form-control"
+                        {% if is_view %}  disabled {% endif %}
+                        value="{{ form.image.data }}"/>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+             <div class="col-1">{{ form.body.label }}</div>
+             <div class="col-11">
+                {{ ckeditor.create(name='content') }}
+             </div>
+        </div>
+
+        <div class="mt-4 float-end">
+                <button
+                        type="button"
+                        onclick="window.history.back();"
+                        class="btn btn-primary">返回
+                </button>
+                {% if not is_view %}
+                    <button name="submit" id="submit"
+                            type="submit" class="btn btn-primary ms-3">提交
+                    </button>
+                {% endif %}
+            </div>
+    </form>
+</div>
+{% endblock %}
+

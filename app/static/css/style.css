@@ -1,0 +1,212 @@
+:root {
+    --primary-color: #0667a8;
+    --color-secondary: #3498DB;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-info {
+    background-color: var(--color-secondary) !important;
+    border-color: var(--color-secondary) !important;
+    color: #fbfbfb !important;
+}
+
+.page-header {
+    width: 60%;
+    padding-top: 4em;
+    margin: 0 auto;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+
+.login-box {
+    width: 22em;
+    margin: 5em auto;
+    background-color: #EAEBEF;
+    padding: 2em 1.5em;
+    border: #b1afaf solid 1px;
+    border-radius: 10px;
+}
+
+div.post-tabs {
+    margin-top: 1em
+}
+
+.profile-thumbnail {
+    position: absolute;
+}
+
+ul.posts {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+    border-top: 1px solid #e0e0e0;
+}
+
+ul.posts li.post {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+ul.posts li.post:hover {
+    background-color: #f0f0f0;
+}
+
+div.post-date {
+    float: right;
+}
+
+div.post-author {
+    font-weight: bold;
+}
+
+div.post-thumbnail {
+    position: absolute;
+}
+
+div.post-content {
+    margin-left: 58px;
+    min-height: 48px;
+}
+
+div.post-body {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.post-footer {
+    text-align: right;
+}
+
+div.post-footer a {
+    text-decoration: none;
+}
+
+ul.comments {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+}
+
+ul.comments li.comment {
+    margin-left: 32px;
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+ul.comments li.comment:nth-child(1) {
+    border-top: 1px solid #e0e0e0;
+}
+
+ul.comments li.comment:hover {
+    background-color: #f0f0f0;
+}
+
+div.comment-date {
+    float: right;
+}
+
+div.comment-author {
+    font-weight: bold;
+}
+
+div.comment-thumbnail {
+    position: absolute;
+}
+
+div.comment-content {
+    margin-left: 48px;
+    min-height: 48px;
+}
+
+div.comment-form {
+    margin: 16px 0px 16px 32px;
+}
+
+div.pagination {
+    width: 100%;
+    justify-content: end;
+    text-align: right;
+    padding: 0px;
+    margin: 20px 0;
+}
+
+div.flask-pagedown-preview {
+    margin: 10px 0px 10px 0px;
+    border: 1px solid #e0e0e0;
+    padding: 4px;
+}
+
+div.flask-pagedown-preview h1 {
+    font-size: 140%;
+}
+
+div.flask-pagedown-preview h2 {
+    font-size: 130%;
+}
+
+div.flask-pagedown-preview h3 {
+    font-size: 120%;
+}
+
+.post-body h1 {
+    font-size: 140%;
+}
+
+.post-body h2 {
+    font-size: 130%;
+}
+
+.post-body h3 {
+    font-size: 120%;
+}
+
+div.workbenck-box {
+    width: 68vw;
+    margin: 1em auto;
+    padding: 2em 1.5em;
+    overflow: hidden;
+}
+
+div.workbenck-box li {
+    list-style-type: none;
+    display: inline-block;
+    margin-right: 1.5em;
+}
+
+/* 修改 nav-item 的默认颜色 */
+.workbench-tabs .nav-item .nav-link {
+    color: #fff; /* 默认文字颜色 */
+    background-color: var(--color-secondary);
+}
+
+/* 修改 nav-item 悬停时的颜色 */
+.workbench-tabs .nav-item .nav-link:hover {
+    color: #fff; /* 悬停文字颜色 */
+    background-color: var(--primary-color); /* 悬停背景颜色 */
+}
+
+/* 修改 nav-item 激活时的颜色 */
+.workbench-tabs .nav-item .nav-link.active {
+    color: #fff; /* 激活文字颜色 */
+    background-color: var(--primary-color); /* 激活背景颜色 */
+}
+
+.form-control, ul {
+    margin-top: inherit;
+    margin-bottom: 0px;
+}
+
+
+.file-preview .fileinput-remove {
+    display: none;
+}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% import 'macros/_macros.html' as macros %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block page_content %}
+
+<div class="post-tabs">
+    <ul class="nav nav-tabs justify-content-end">
+        <li{% if not show_followed %} aria-current="page" {% endif %} class="nav-item">
+            <a {% if not show_followed %} class="nav-link active" {%  else %} class="nav-link" {% endif %} href="{{ url_for('.show_all') }}">All</a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li{% if show_followed %} aria-current="page" {% endif %}  class="nav-item">
+            <a {% if show_followed %} class="nav-link active" {%  else %} class="nav-link" {% endif %} href="{{ url_for('.show_followed') }}">Followed</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% include '_posts.html' %}
+</div>
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+    <div class="card p-5 m-5 w-75 mx-auto" id="top-banner">
+        <form id="topImageForm" method="POST" enctype="multipart/form-data">
+            <div id="topImageFormInfo"
+                 data-top-image="{{ topImage }}"
+            ></div>
+            {{ form.csrf_token }}
+            <div class="row">
+                <div class="col-1 my-auto">{{ form.type.label }}</div>
+                <div class="col-11">
+                    <div class="form-control">
+                        {% for value in form.type.iter_choices() %}
+                            {% if value[2] or value[0] == form.type.data %}
+                                <label class="me-2">
+                                    <input class="me-1"
+                                           type="radio"
+                                           disabled
+                                           name="{{ form.type.name }}"
+                                           value="{{ value[0] }}"
+                                           checked
+                                    >{{ value[1] }}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row mt-4">
+                <div class="col-1 my-auto"> {{ form.image.label }}</div>
+                <div class="col-11">
+                    <input
+                            id="input-id"
+                            name="input-id[]"
+                            type="file"
+                            accept="image/*"
+                            class="form-control"
+                            {% if is_view %}  disabled {% endif %}
+                            value="{{ form.image.data }}"/>
+                </div>
+            </div>
+
+            <div class="mt-4 float-end">
+                <button
+                        type="button"
+                        onclick="window.history.back();"
+                        class="btn btn-primary">返回
+                </button>
+                {% if not is_view %}
+                    <button name="submit" id="submit"
+                            type="submit" class="btn btn-primary ms-3">提交
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}"
+              type="image/x-icon">
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='css/fileinput.min.css') }}" rel="stylesheet"/>
+        <title>{% block title %}Flasky{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">导航栏</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse w-100" id="navbarNav">
+                <ul class="navbar-nav w-100 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link my-auto" aria-current="page" href="{{ url_for('main.index') }}">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">数据管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">客户</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('workbench.index') }}">工作台</a>
+                    </li>
+                    <li class="nav-item me-auto">
+                        <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                <img class="rounded-circle me-2"
+                                     style="width: 40px; height: 40px;"
+                                     size="20"
+                                     src="{{ url_for('static', filename='/images/head.png') }}"> {{ current_user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" role="button" href="{{ url_for('auth.logout') }}">退出</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-secondary" href="{{ url_for('auth.login') }}">登录</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+<!-- Your page content -->
+{% block content %}
+    <div class="container home">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        {% block page_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ moment.include_moment() }}
+    <!-- Optional JavaScript -->
+    {{ bootstrap.load_js() }}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content') }}
+    <script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/file_upload/fileinput.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/file_upload/zh.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
+</body>
+</html>

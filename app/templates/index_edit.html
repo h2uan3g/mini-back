@@ -1,0 +1,18 @@
+<div class="page-header">
+    <h1>
+        Hello,
+        {% if current_user.is_authenticated %}
+            {{ current_user.username }}
+        {% else %}
+            Stranger
+        {% endif %}!
+    </h1>
+    <hr>
+
+    {% if not known %}
+    <p>Pleased to meet you!</p></p>
+    {% else %}
+    <p>Happy to see you again!</p>
+    {% endif %}
+    {{ render_form(form) }}
+</div>

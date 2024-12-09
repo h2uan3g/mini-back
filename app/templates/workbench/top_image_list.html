@@ -1,0 +1,18 @@
+{% from 'macros/_macros_table.html' import h_render_table %}
+
+<div class="d-flex flex-column align-items-end py-4 my-2">
+    <div class="w-100">
+        {{ h_render_table(
+                        topImages,
+                        titles=titles,
+                        actions_title='操作',
+                        urlize_columns=('text'),
+                        table_classes='table-striped text-center',
+                        show_actions=True,
+                        delete_modal=True,
+                        view_url=('workbench.top_image_view', [('top_image_id', ':id')]),
+                        edit_url=('workbench.top_image_edit', [('top_image_id', ':id')])
+                        ) }}
+    </div>
+
+</div>

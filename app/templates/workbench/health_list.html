@@ -1,0 +1,18 @@
+{% from 'macros/_macros_table.html' import h_render_table %}
+
+<div class="d-flex flex-column align-items-end py-4 my-2">
+    <div class="w-100">
+        {{ h_render_table(
+                        health,
+                        titles=titles,
+                        actions_title='操作',
+                        urlize_columns=('text'),
+                        table_classes='table-striped text-center',
+                        show_actions=True,
+                        delete_modal=True,
+                        view_url=('workbench.health_view', [('health_id', ':id')]),
+                        edit_url=('workbench.health_edit', [('health_id', ':id')])
+                        ) }}
+    </div>
+
+</div>

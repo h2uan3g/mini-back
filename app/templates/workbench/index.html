@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    <div class="workbench-tabs mt-4">
+        <ul class="nav nav-tabs justify-content-end" role="tablist">
+            <li {% if  show_top_image %} aria-current="page" {% endif %} class="nav-item">
+                <a {% if show_top_image %} class=" nav-link active" {% else %} class="nav-link" {% endif %}
+                                           role="tab"
+                                           id="banner-tab"
+                                           href="{{ url_for('workbench.index') }}">轮播栏</a>
+            </li>
+            <li {% if not show_top_image %} aria-current="page" {% endif %} class="nav-item" }
+                                            class="nav-item">
+                <a {% if not show_top_image %} class="nav-link active" {% else %}  class="nav-link" {% endif %}
+                                               id="health-tab"
+                                               role="tab"
+                                               href="{{ url_for('workbench.health') }}">健康宝典</a>
+            </li>
+        </ul>
+        {% if show_top_image %}
+            {% include 'workbench/top_image_list.html' %}
+        {% else %}
+            {% include 'workbench/health_list.html' %}
+        {% endif %}
+
+    </div>
+{% endblock %}

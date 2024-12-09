@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+    <div class="workbench-tabs mt-4">
+        <ul class="nav nav-tabs justify-content-end" role="tablist">
+              <li {% if not show_classify %} aria-current="page" {% endif %} class="nav-item" }
+                                           class="nav-item">
+                <a {% if not show_classify %} class="nav-link active" {% else %}  class="nav-link" {% endif %}
+                                              role="tab"
+                                              id="tab-product"
+                                              href="{{ url_for('product.index') }}">产品详情</a>
+            </li>
+            <li {% if show_classify %} aria-current="page" {% endif %} class="nav-item">
+                <a {% if show_classify %} class=" nav-link active" {% else %} class="nav-link" {% endif %}
+                                          role="tab"
+                                          id="tab-classify"
+                                          href="{{ url_for('product.classify') }}">产品类别</a>
+            </li>
+        </ul>
+
+        {% if show_classify %}
+            {% include 'product/p_classify.html' %}
+        {% else %}
+            {% include 'product/p_product.html' %}
+        {% endif %}
+
+    </div>
+
+{% endblock %}

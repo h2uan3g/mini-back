@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+    <div class="card p-5 m-5">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="d-flex flex-row align-items-center">
+                <div>{{ form.name.label }}</div>
+                <div class="flex-fill">{{ form.name(class='form-control',disabled=is_view) }}</div>
+            </div>
+
+            <div class="mt-4 float-end">
+                <button
+                        type="button"
+                        onclick="window.history.back();"
+                        class="btn btn-primary">返回
+                </button>
+                {% if not is_view %}
+                    <button name="submit" id="submit"
+                            type="submit" class="btn btn-primary ms-3">提交
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

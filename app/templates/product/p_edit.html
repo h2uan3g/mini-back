@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+    <div class="card p-5 m-5">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="mt-3 row">
+                <span class="col-2 my-auto">{{ form.name.label }}</span>
+                <div class="col-4">{{ form.name(class='form-control', disabled=is_view) }}</div>
+                <span class="col-2 my-auto">{{ form.classify.label }}</span>
+                <div class="col-4">{{ form.classify(class='form-control', disabled=is_view) }}</div>
+            </div>
+            <div class="mt-3 row">
+                <span class="col-2 my-auto">{{ form.price.label }}</span>
+                <div class="col-4">{{ form.price(class='form-control', disabled=is_view) }}</div>
+                <span class="col-2 my-auto">{{ form.discount.label }}</span>
+                <div class="col-4">{{ form.discount(class='form-control', disabled=is_view) }}</div>
+            </div>
+
+            <div class="mt-3 row">
+                <span class="col-2 my-auto">{{ form.introduction.label }}</span>
+                <div class="col-10">{{ form.introduction(class='form-control', disabled=is_view) }}</div>
+            </div>
+
+            <div class="mt-3 row">
+                <span class="col-2 my-auto py-auto text-start">{{ form.image1.label }}</span>
+                <div class="col-10">{{ form.image1(class='form-control', disabled=is_view) }}</div>
+            </div>
+
+            <div class="mt-3 row">
+                <span class="col-2 my-auto py-auto text-start">{{ form.image2.label }}</span>
+                <div class="col-10">{{ form.image2(class='form-control', disabled=is_view) }}</div>
+            </div>
+
+            <div class="mt-4 float-end">
+                <button
+                        type="button"
+                        onclick="window.history.back();"
+                        class="btn btn-primary">返回
+                </button>
+                {% if not is_view %}
+                    <button name="submit" id="submit"
+                            type="submit" class="btn btn-primary ms-3">提交
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
