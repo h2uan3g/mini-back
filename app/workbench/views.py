@@ -67,7 +67,11 @@ def top_image_edit(top_image_id):
             db.session.commit()
             flash("上传成功!!!")
             return redirect(url_for('workbench.index'))
+    elif form.image.errors and form.image.data:
+        # 图片未修改
+        print(form.errors)
     else:
+        flash("提交失败!!!")
         print(form.errors)
     form.type.data = topImage.type
     form.image.data = topImage.image
