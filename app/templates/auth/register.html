@@ -4,8 +4,8 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-<div class="login-box">
-    <h3>注册</h3>
-    {{ render_form(form) }}
-</div>
+    <div style="width: 30vw;" class="border border-1 rounded shadow px-3 py-5  mt-5 mx-auto">
+        <h3 id="register-back"><i class="bi bi-arrow-left me-2"></i>注册</h3>
+        {{ render_form(form) }}
+    </div>
 {% endblock %}

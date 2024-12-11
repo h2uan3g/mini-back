@@ -41,11 +41,14 @@ def product_view(product_id):
 @product.route('/<int:product_id>/edit', methods=['GET', 'POST'])
 @product.route('/edit', methods=['GET', 'POST'])
 def product_edit(product_id=None):
-    product = Product.query.get(product_id)
+    if product_id is None:
+        product = Product()
+    else:
+        product = Product.query.get(product_id)
+        if product is None:
+            flash('数据查询失败')
+            return redirect(url_for('.index'))
     form = ProductForm()
-    if product is None:
-        flash('数据查询失败')
-        return redirect(url_for('.index'))
     form.name.data = product.name
     form.introduction.data = product.introduction
     form.price.data = product.price

@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #0667a8;
-    --color-secondary: #3498DB;
+    --primary-color: #212529;
+    --color-secondary: rgba(33, 37, 41, 0.56);
 }
 
 .btn-primary {
@@ -21,20 +21,7 @@
 }
 
 body {
-    margin: 0;
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-}
-
-
-.login-box {
-    width: 22em;
-    margin: 5em auto;
-    background-color: #EAEBEF;
-    padding: 2em 1.5em;
-    border: #b1afaf solid 1px;
-    border-radius: 10px;
+    padding-top: 4.5rem;
 }
 
 div.post-tabs {

@@ -70,7 +70,8 @@
         {% if show_actions %}
             <th scope="col" class="align-middle w-25">{{ actions_title }}
                 {% if new_url %}
-                    <a class="action-icon text-decoration-none"
+                    <a style="color: #212529;"
+                       class="action-icon text-decoration-none"
                             {% if new_url.startswith('/') %}
                        href="{{ new_url }}"
                             {% else %}
@@ -119,6 +120,8 @@
                     {% else %}
                         医疗场景
                     {% endif %}
+                {% elif key =='updateTime' %}
+                    {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
                 {% else %}
                     {{ value }}
                 {% endif %}

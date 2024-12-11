@@ -8,7 +8,8 @@ class LoginForm(FlaskForm):
     email = StringField('用户名或邮箱', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('账户密码', validators=[DataRequired()])
     remember_me = BooleanField('记住密码')
-    submit = SubmitField('登录')
+    submit = SubmitField('登 录',
+                         render_kw={"style": "width: 100%;"})
 
 
 class RegistrationForm(FlaskForm):
@@ -20,7 +21,8 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('密码', validators=[
         DataRequired(), EqualTo('password2', message='密码不一致')])
     password2 = PasswordField('确认密码', validators=[DataRequired()])
-    submit = SubmitField('注册')
+    submit = SubmitField('注 册',
+                         render_kw={"style": "width: 100%;"})
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
@@ -29,4 +31,3 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
-

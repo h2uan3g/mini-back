@@ -66,12 +66,12 @@ def top_image_edit(top_image_id):
                 db.session.add(topImageType)
             db.session.commit()
             flash("上传成功!!!")
-            return redirect(url_for('workbench.index'))
+            return jsonify({'redirect': url_for('.index')})
     elif form.image.errors and form.image.data:
         # 图片未修改
         print(form.errors)
+        return jsonify({'redirect': url_for('.index')})
     else:
-        flash("提交失败!!!")
         print(form.errors)
     form.type.data = topImage.type
     form.image.data = topImage.image
@@ -81,27 +81,7 @@ def top_image_edit(top_image_id):
                            form=form)
 
 
-@workbench.route('/<int:top_image_id>/delete', methods=['GET', 'POST'])
-def top_image_delete(top_image_id):
-    if top_image_id is not None:
-        try:
-            topImages = TopImage.query.filter_by(id=top_image_id).first()
-            pre_image = topImages.image
-            if topImages:
-                topImages.image = ""
-                db.session.add(topImages)
-                db.session.commit()
-        except Exception as e:
-            print(e)
-            db.session.rollback()
-        else:
-            os.remove(current_app.config['UPLOAD_FOLDER'] + '/' + pre_image)
-        finally:
-            db.session.close()
-    return jsonify('success')
-
-
-@workbench.route('/health', methods=['GET', 'POST'])
+@workbench.route('/health', methods=['GET'])
 def health():
     health = Health.query.all()
     form = HealthForm()
@@ -127,23 +107,26 @@ def health_view(health_id):
     form.image.data = health.coverImage
     return render_template('workbench/w_edit_health.html',
                            healthInfo=json.dumps(health.to_json()),
-                           is_view=True,
+                           status=0,
                            form=form)
 
 
 @workbench.route('/<int:health_id>/health_edit', methods=['GET', 'POST'])
-def health_edit(health_id):
-    health = Health.query.get(health_id)
+@workbench.route('/health_edit', methods=['GET', 'POST'])
+def health_edit(health_id=None):
+    if health_id is None:
+        health = Health()
+    else:
+        health = Health.query.get(health_id)
+        if health is None:
+            flash('数据查询失败')
+            return redirect(url_for('.index'))
     form = HealthForm()
-    if health is None:
-        flash('数据查询失败')
-        return redirect(url_for('.index'))
     if form.validate_on_submit():
         image = form.image.data
         # 一个类型只有一项
         type = form.type.data
         if image:
-            save_file = save_single_file(image)
             healthPre = Health.query.filter_by(type=type).first()
             if healthPre:
                 pre_image = healthPre.coverImage
@@ -151,8 +134,8 @@ def health_edit(health_id):
                     os.remove(current_app.config['UPLOAD_FOLDER'] + '/' + pre_image)
             else:
                 healthPre = Health()
+            save_file = save_single_file(image)
             healthPre.coverImage = save_file
-            healthPre.type = type
             healthPre.auth = form.auth.data
             healthPre.title = form.title.data
             healthPre.updateTime = datetime.now()
@@ -160,7 +143,19 @@ def health_edit(health_id):
             db.session.add(healthPre)
             db.session.commit()
             flash("上传成功!!!")
-            return redirect(url_for('.index', show_top_image=False))
+            # return redirect(url_for('.index', show_top_image=False))
+            return jsonify({'redirect': url_for('.health')})
+    elif form.image.errors and form.image.data:
+        # 图片未修改
+        type = form.type.data
+        healthPre = Health.query.filter_by(type=type).first()
+        healthPre.auth = form.auth.data
+        healthPre.title = form.title.data
+        healthPre.updateTime = datetime.now()
+        healthPre.body = form.body.data
+        db.session.add(healthPre)
+        db.session.commit()
+        return jsonify({'redirect': url_for('.health')})
     else:
         print(form.errors)
     form.type.data = health.type
@@ -171,6 +166,7 @@ def health_edit(health_id):
     return render_template('workbench/w_edit_health.html',
                            healthInfo=json.dumps(health.to_json()),
                            is_view=False,
+                           status=2,  # 0 view 1 edit 2 new
                            form=form)
 
 

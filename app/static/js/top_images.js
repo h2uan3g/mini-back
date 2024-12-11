@@ -4,7 +4,6 @@ import zh_CN from '/static/js/file_upload/zh_CN.min.js'
 $(document).ready(function () {
         let topImage = $('#topImageFormInfo').data('top-image');
         let isView = $('#topImageIsView').data('is-view');
-        let csrfTokenTop = $('#topImageForm input[name="csrf_token"]').val();
 
         const uppyTopImage = new Uppy({
             debug: true,
@@ -20,13 +19,16 @@ $(document).ready(function () {
             hideUploadButton: true,
             hideCancelButton: true,
             showSelectedFiles: true,
+            height: 300,
+            width: '100%',
             totalFileCount: 1,
             showPreview: true,
             showRemoveButtonAfterComplete: false,
             proudlyDisplayPoweredByUppy: false,
             individualCancellation: true,
             disabled: isView == 0
-        }).on('file-removed', (result) => {
+        })
+        uppyTopImage.on('file-removed', (result) => {
             console.log("result: ", result)
             if (isView == 0) {
                 uppyTopImage.addFile(result)
@@ -57,7 +59,7 @@ $(document).ready(function () {
 
             // 获取表单数据
             let formData = new FormData(this); // 序列化表单数据
-
+            formData.append('type', topImage.type)
             // let files = $('#input-id')[0].files;
             const files = uppyTopImage.getFiles();
             if (files == undefined || files.length == 0) {
@@ -76,8 +78,9 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     // 请求成功后的回调
-                    //console.log('Form submitted successfully:', response);
-                    alert('提交成功!');
+                    if (response.redirect) {
+                        window.location.href = response.redirect; // 前端手动跳转
+                    }
                 },
                 error: function (xhr, status, error) {
                     // 请求失败后的回调

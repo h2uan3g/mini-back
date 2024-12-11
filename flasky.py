@@ -1,6 +1,7 @@
 import os
 import click
 import sys
+from datetime import datetime
 from flask_migrate import Migrate, upgrade
 from app import create_app, db
 from app.models import User, Role, Permission, Product
@@ -16,9 +17,17 @@ app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
 
 
+# 自定义过滤器
+@app.template_filter('format_datetime')
+def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
+    if isinstance(value, datetime):
+        return value.strftime(format)
+    return value
+
+
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, User=User, Role=Role,product=Product,Permission=Permission)
+    return dict(db=db, User=User, Role=Role, product=Product, Permission=Permission)
 
 
 @app.cli.command()
