@@ -1,6 +1,12 @@
 :root {
-    --primary-color: #212529;
-    --color-secondary: rgba(33, 37, 41, 0.56);
+    --primary-color: #754ffe;
+    --color-secondary: #94a3b8;
+}
+
+body {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    color: rgb(var(--bs-tertiary-color-rgb));
 }
 
 .btn-primary {
@@ -8,20 +14,27 @@
     border-color: var(--primary-color) !important;
 }
 
-.btn-info {
-    background-color: var(--color-secondary) !important;
-    border-color: var(--color-secondary) !important;
-    color: #fbfbfb !important;
+.btn-outline-primary {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.carousel-item {
+    height: 32rem;
+}
+
+.featurette-divider {
+    margin: 5rem 0;
+}
+
+.featurette-heading {
+    letter-spacing: -.05rem;
 }
 
 .page-header {
     width: 60%;
     padding-top: 4em;
     margin: 0 auto;
-}
-
-body {
-    padding-top: 4.5rem;
 }
 
 div.post-tabs {
@@ -172,8 +185,9 @@ div.workbenck-box li {
 
 /* 修改 nav-item 的默认颜色 */
 .workbench-tabs .nav-item .nav-link {
-    color: #fff; /* 默认文字颜色 */
-    background-color: var(--color-secondary);
+    color: var(--primary-color); /* 默认文字颜色 */
+    background-color: #fff;
+    border-bottom: 1px solid var(--primary-color);
 }
 
 /* 修改 nav-item 悬停时的颜色 */

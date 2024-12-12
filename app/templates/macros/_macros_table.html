@@ -70,7 +70,7 @@
         {% if show_actions %}
             <th scope="col" class="align-middle w-25">{{ actions_title }}
                 {% if new_url %}
-                    <a style="color: #212529;"
+                    <a style="color: #754ffe;"
                        class="action-icon text-decoration-none"
                             {% if new_url.startswith('/') %}
                        href="{{ new_url }}"
@@ -157,7 +157,7 @@
                         </a>
                     {% endif %}
                     {% if edit_url -%}
-                        <a class="btn btn-info action-icon text-decoration-none"
+                        <a class="btn btn-outline-primary action-icon text-decoration-none"
                                 {% if edit_url is string %}
                            href="{{ edit_url }}"
                                 {% else %}

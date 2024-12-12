@@ -7,48 +7,9 @@ from ..decorators import admin_required, permission_required
 from ..models import User, Role, Permission, Post, Comment
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/')
 def index():
-    form = PostForm()
-    if current_user.can(Permission.WRITE) and form.validate_on_submit():
-        post = Post(body=form.body.data,
-                    author=current_user._get_current_object())
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('.index'))
-    page = request.args.get('page', 1, type=int)
-    show_followed = False
-    if current_user.is_authenticated:
-        show_followed = bool(request.cookies.get('show_followed', ''))
-    if show_followed:
-        query = current_user.followed_posts
-    else:
-        query = Post.query
-    pagination = query.order_by(Post.timestamp.desc()).paginate(
-        page=page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
-        error_out=False)
-    posts = pagination.items
-    return render_template('index.html',
-                           form=form,
-                           show_followed=show_followed,
-                           pagination=pagination,
-                           posts=posts)
-
-
-@main.route('/all')
-@login_required
-def show_all():
-    resp = make_response(redirect(url_for('.index')))
-    resp.set_cookie('show_followed', '', max_age=30 * 24 * 60 * 60)  # 30天
-    return resp
-
-
-@main.route('/followed')
-@login_required
-def show_followed():
-    resp = make_response(redirect(url_for('.index')))
-    resp.set_cookie('show_followed', '1', max_age=30 * 24 * 60 * 60)  # 30天
-    return resp
+    return render_template('index.html')
 
 
 @main.route('/user/<username>')

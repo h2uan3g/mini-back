@@ -71,5 +71,6 @@
 
 {% block scripts %}
     {{ super() }}
+    <script type="module" src="{{ url_for('static', filename='js/quill.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/health.js') }}"></script>
 {% endblock %}

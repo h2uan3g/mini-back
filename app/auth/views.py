@@ -47,7 +47,7 @@ def resend_confirmation():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()  
+    form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
@@ -57,13 +57,13 @@ def login():
                 next = url_for('main.index')
             return redirect(next)
         flash('用户名或密码错误')
-    return render_template('auth/login.html', form=form) 
+    return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout', methods=['GET', 'POST'])
-def logout():   
+def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('退出成功!')
     return redirect(url_for('main.index'))
 
 
@@ -76,7 +76,7 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('You can now login.')
+        flash('注册成功!')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
@@ -85,4 +85,3 @@ def register():
 @login_required
 def secret():
     return 'Only authenticated users are allowed!'
-
