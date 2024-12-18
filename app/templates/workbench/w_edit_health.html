@@ -31,24 +31,9 @@
             <div class="row mt-3 mb-3">
                 <div class="col-1">{{ form.body.label }}</div>
                 <div class="col-11">
-                    <div id="toolbar_health">
-                        <span class="ql-formats">
-                            <button class="ql-header" value="1"></button>
-                            <button class="ql-header" value="2"></button>
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                             <button class="ql-link"></button>
-                            <button class="ql-image"></button>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-list" value="ordered"></button>
-                            <button class="ql-list" value="bullet"></button>
-                        </span>
-                    </div>
-                    <div id="editor_health">
-
+                    <div id="editor—wrapper" class="border border-dark-subtle">
+                        <div id="toolbar-container"><!-- 工具栏 --></div>
+                        <div id="editor-container" style="min-height: 550px;"><!-- 编辑器 --></div>
                     </div>
                 </div>
             </div>
@@ -59,9 +44,9 @@
                         onclick="window.history.back();"
                         class="btn btn-primary">返回
                 </button>
-                {% if not is_view %}
+                {% if status != 0 %}
                     <button name="submit" id="submit"
-                            type="submit" class="btn btn-primary ms-3">提交
+                            type="submit" class="btn btn-outline-primary ms-3">提交
                     </button>
                 {% endif %}
             </div>
@@ -71,6 +56,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script type="module" src="{{ url_for('static', filename='js/quill.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/editor/wangeditor.min.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/health.js') }}"></script>
 {% endblock %}

@@ -1,14 +1,11 @@
 import hashlib
-import bleach
 from datetime import datetime
 from flask import current_app, request, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
-from markdown import markdown
-from . import db
-from . import login_manager
-from .exceptions import ValidationError
+from app import db
+from app import login_manager
 
 
 @login_manager.user_loader
@@ -100,7 +97,6 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.now)
     last_seen = db.Column(db.DateTime(), default=datetime.now)
     avatar_hash = db.Column(db.String(32))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
     followed = db.relationship('Follow', foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
                                lazy='dynamic',
@@ -109,7 +105,6 @@ class User(UserMixin, db.Model):
                                 backref=db.backref('followed', lazy='joined'),
                                 lazy='dynamic',
                                 cascade='all, delete-orphan')
-    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -227,152 +222,14 @@ class User(UserMixin, db.Model):
         return self.followers.filter_by(
             follower_id=user.id).first() is not None
 
-    @property
-    def followed_posts(self):
-        return Post.query.join(Follow, Follow.followed_id == Post.author_id) \
-            .filter(Follow.follower_id == self.id)
-
     def to_json(self):
         json_user = {
             'url': url_for('api.get_user', id=self.id),
             'username': self.username,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
-            'posts_url': url_for('api.get_user_posts', id=self.id),
-            'followed_posts_url': url_for('api.get_user_followed_posts',
-                                          id=self.id),
-            'post_count': self.posts.count()
         }
         return json_user
-
-
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    body_html = db.Column(db.Text)
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
-
-    @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True))
-
-    def to_json(self):
-        json_post = {
-            'url': url_for('api.get_post', id=self.id),
-            'body': self.body,
-            'body_html': self.body_html,
-            'timestamp': self.timestamp,
-            'author_url': url_for('api.get_user', id=self.author_id),
-            'comments_url': url_for('api.get_post_comments', id=self.id),
-            'comment_count': self.comments.count()
-        }
-        return json_post
-
-    @staticmethod
-    def from_json(json_post):
-        body = json_post.get('body')
-        if body is None or body == '':
-            raise ValidationError('post does not have a body')
-        return Post(body=body)
-
-
-db.event.listen(Post.body, 'set', Post.on_changed_body)
-
-
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    body_html = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    disabled = db.Column(db.Boolean)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-
-    @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i',
-                        'strong']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True))
-
-
-db.event.listen(Comment.body, 'set', Comment.on_changed_body)
-
-
-class Product(db.Model):
-    __tablename__ = 'products'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    introduction = db.Column(db.Text)
-    price = db.Column(db.Numeric(10, 2))
-    discount = db.Column(db.Float)
-    image1 = db.Column(db.Text)
-    image2 = db.Column(db.Text)
-    classify_id = db.Column(db.Integer, db.ForeignKey('classifys.id'), name='fk_product_classify')
-
-    def __init__(self):
-        if self.price is None:
-            self.price = 0
-        if self.discount is None:
-            self.discount = 0
-
-
-class Classify(db.Model):
-    __tablename__ = 'classifys'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    product = db.relationship('Product', backref='product', lazy='dynamic')
-
-
-class TopImage(db.Model):
-    __tablename__ = 'top_images'
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Integer, unique=True)
-    image = db.Column(db.String(64))
-
-    def to_json(self):
-        json_post = {
-            'id': self.id,
-            'type': self.type,
-            'image': url_for('static', filename=f'images/{self.image}', _external=True) if self.image else "",
-        }
-        return json_post
-
-
-class Health(db.Model):
-    __tablename__ = 'healths'
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Integer, unique=True)
-    title = db.Column(db.String(64))
-    coverImage = db.Column(db.String(64))
-    auth = db.Column(db.String(64))
-    updateTime = db.Column(db.DateTime)
-    body = db.Column(db.Text)
-
-    def __init__(self):
-        if self.updateTime is None:
-            self.updateTime = datetime.now()
-
-    def to_json(self):
-        json_post = {
-            'id': self.id,
-            'type': self.type,
-            'title': self.title,
-            'auth': self.auth,
-            'body': self.body,
-            'image': url_for('static', filename=f'images/{self.coverImage}', _external=True) if self.coverImage else "",
-        }
-        return json_post
 
 
 class AnonymousUser(AnonymousUserMixin):

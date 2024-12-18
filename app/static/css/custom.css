@@ -1,0 +1,95 @@
+@charset "UTF-8";
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: rgb(var(--bs-tertiary-color-rgb));
+}
+
+.btn-primary {
+  background-color: #754ffe;
+  border-color: #754ffe;
+}
+.btn-primary:hover {
+  background-color: white;
+  color: #754ffe;
+}
+
+.btn-outline-primary {
+  border-color: #754ffe;
+  color: #754ffe;
+}
+.btn-outline-primary:hover {
+  color: white !important;
+  background-color: #754ffe;
+}
+
+.active > .page-link {
+  color: white;
+  background-color: #754ffe;
+  border-color: #754ffe;
+}
+
+.page-link {
+  color: #754ffe;
+}
+
+.workbench-tabs .nav-item .nav-link {
+  color: #754ffe;
+  background-color: #fff;
+  border-bottom: 1px solid #754ffe;
+}
+.workbench-tabs .nav-item .nav-link:hover {
+  color: #fff;
+  background-color: #754ffe;
+}
+.workbench-tabs .nav-item .nav-link.active {
+  color: #fff;
+  background-color: #754ffe;
+}
+
+.featurette-heading {
+  letter-spacing: -0.05rem;
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+}
+@media (min-width: 40em) {
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+.floating-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 120px;
+  z-index: 1030; /* 确保按钮在其他内容之上 */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #754ffe; /* 颜色可以根据需要更改 */
+  color: white;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 1px 18px rgba(0, 0, 0, 0.12), 0 3px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+.floating-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.multi-line-two {
+  line-height: 1.5em; /* 设置单行高度 */
+  min-height: 3em; /* 至少两行高度（1.5em * 2）*/
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 设置显示的行数 */
+  overflow: hidden;
+}
+
+/*# sourceMappingURL=custom.css.map */

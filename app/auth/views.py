@@ -1,9 +1,23 @@
-from flask import render_template, flash, request, url_for, redirect
+from flask import render_template, flash, request, url_for, redirect, session, make_response
 from flask_login import login_required, login_user, logout_user, current_user
+from io import BytesIO
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from .. import db
 from ..models import User
+from ..utils import generate_image
+
+
+@auth.route('/image')
+def get_image():
+    image, code = generate_image(4)
+    buffer = BytesIO()
+    image.save(buffer, 'jpeg')
+    buf_bytes = buffer.getvalue()
+    session['valid'] = code
+    response = make_response(buf_bytes)
+    response.headers['Content-Type'] = 'image/jpeg'
+    return response
 
 
 @auth.before_app_request
@@ -48,6 +62,7 @@ def resend_confirmation():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    form.remember_me.data = True
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
@@ -57,6 +72,8 @@ def login():
                 next = url_for('main.index')
             return redirect(next)
         flash('用户名或密码错误')
+    elif form.errors:
+        flash(f'{form.errors}')
     return render_template('auth/login.html', form=form)
 
 
@@ -79,9 +96,3 @@ def register():
         flash('注册成功!')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
-
-
-@auth.route('/secret')
-@login_required
-def secret():
-    return 'Only authenticated users are allowed!'

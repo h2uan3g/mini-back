@@ -1,8 +1,7 @@
-from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.fields.choices import RadioField, SelectField
-from wtforms.fields.simple import SubmitField, StringField
+from wtforms.fields.simple import SubmitField, StringField, TextAreaField
 from wtforms.validators import DataRequired
 
 
@@ -14,7 +13,7 @@ class TopImageForm(FlaskForm):
                           (2, '医疗场景'),
                       ],
                       validators=[DataRequired()],
-                      default=0,)
+                      default=0, )
 
     image = FileField('照片：',
                       validators=[FileAllowed(['jpeg', 'jpg', 'png', 'gif'], '只能上传图片'), DataRequired()],
@@ -53,5 +52,5 @@ class HealthForm(FlaskForm):
                       render_kw={"style": "border: 1px solid; \
                                           border-color:silver; padding:4px;border-radius:4px;"}
                       )
-    body = CKEditorField('正文：')
+    body = TextAreaField('正文：')
     submit = SubmitField('提交')

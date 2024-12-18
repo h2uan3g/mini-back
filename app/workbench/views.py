@@ -3,21 +3,20 @@ import os
 from datetime import datetime
 
 from flask import render_template, send_from_directory, url_for, request, current_app, flash, redirect, jsonify
-from flask_ckeditor import upload_success, upload_fail
 from werkzeug.utils import secure_filename
 
 from . import workbench
 from .forms import TopImageForm, HealthForm
 from .. import db
 from ..models import TopImage, Health
-from ..utils import save_single_file
+from ..utils import save_single_file, params_error, ok
 
 
 @workbench.route('/', methods=['GET'])
 def index():
     topImages = TopImage.query.all()
     form = TopImageForm()
-    titles = [('id', ''), ('type', '类型'), ('image', '图片')]
+    titles = [('id', '序号'), ('type', '类型'), ('image', '图片')]
     return render_template('workbench/index.html',
                            form=form,
                            titles=titles,
@@ -85,7 +84,7 @@ def top_image_edit(top_image_id):
 def health():
     health = Health.query.all()
     form = HealthForm()
-    titles = [('id', ''), ('type', '类型'), ('title', '标题'), ('auth', '作者'), ('updateTime', '修改时间')]
+    titles = [('id', '序号'), ('type', '类型'), ('title', '标题'), ('auth', '作者'), ('updateTime', '修改时间')]
     return render_template('workbench/index.html',
                            form=form,
                            titles=titles,
@@ -142,8 +141,6 @@ def health_edit(health_id=None):
             healthPre.body = form.body.data
             db.session.add(healthPre)
             db.session.commit()
-            flash("上传成功!!!")
-            # return redirect(url_for('.index', show_top_image=False))
             return jsonify({'redirect': url_for('.health')})
     elif form.image.errors and form.image.data:
         # 图片未修改
@@ -172,21 +169,19 @@ def health_edit(health_id=None):
 
 @workbench.route('/upload', methods=['POST'])
 def upload():
-    f = request.files.get('upload')  # 获取上传的图片文件对象
+    f = request.files.get('upload')
     if f:
         extension = f.filename.split('.')[-1].lower()
         if extension not in ['jpg', 'jpeg', 'png', 'gif']:
-            return upload_fail(message='仅支持图片!')  # 如果不是图片，返回错误
-        # 保存文件
+            return params_error(message='仅支持图片!')
         filename = secure_filename(f.filename)
-        f.save(os.path.join('/the/uploaded/directory', filename))
-        # 返回上传成功的响应
-        url = url_for('uploaded_files', filename=filename)
-        return upload_success(url=url)
-    return upload_fail(message='No file.py uploaded.')
+        f.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        url = url_for('.uploaded_files', filename=filename)
+        return ok(data={'url': url})
+    return params_error(message='No file.py uploaded.')
 
 
 @workbench.route('/files/<path:filename>')
 def uploaded_files(filename):
-    path = '/the/uploaded/directory'  # 设置图片保存的目录
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'])
     return send_from_directory(path, filename)

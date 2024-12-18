@@ -13,10 +13,11 @@
                     show_actions=True,
                     delete_modal=True,
                     delete_url=('product.product_delete', [('product_id', ':id')]),
-                    view_url=('product.product_view', [('product_id', ':id')]),
-                    edit_url=('product.product_edit', [('product_id', ':id')]),
-                    new_url=url_for('product.product_edit')
-                    ) }}
+                    view_url=('product.product_view', [('product_id', ':id'), ('type', '1')]),
+                    edit_url=('product.product_edit', [('product_id', ':id'), ('type', '1')]),
+                    new_url=('product.product_edit',  [('type', '1')]),
+                    page=pagination.page,
+                    per_page=pagination.per_page) }}
     </div>
     <div class="mt-4">
         {{ render_pagination(pagination) }}

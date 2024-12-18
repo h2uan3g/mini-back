@@ -43,7 +43,9 @@
                       delete_url=None,
                       delete_modal=False,
                       new_url=None,
-                      action_pk_placeholder=':id') %}
+                      action_pk_placeholder=':id',
+                      page=0,
+                      per_page=0) %}
     {% if not titles %}
         {% set titles = get_table_titles(data, primary_key, primary_key_title) %}
     {% endif %}
@@ -72,10 +74,10 @@
                 {% if new_url %}
                     <a style="color: #754ffe;"
                        class="action-icon text-decoration-none"
-                            {% if new_url.startswith('/') %}
+                            {% if new_url is string %}
                        href="{{ new_url }}"
                             {% else %}
-                       href="{{ url_for(new_url) }}"
+                       href="{{ build_url(row, new_url[0], new_url[1], model, primary_key) | trim }}"
                             {% endif %}
                        title="{{ config['BOOTSTRAP_TABLE_NEW_TITLE'] }}">
                         {{ render_icon('plus-circle-fill') }}
@@ -111,7 +113,7 @@
                 {{ value.value }}
             {%- else -%}
                 {% if key =='index' %}
-                    {{ outer_index }}
+                    {{ outer_index + (page-1) * per_page }}
                 {% elif key =='type' %}
                     {% if value == 0 %}
                         癌症知识
@@ -196,13 +198,13 @@
                                                 确定删除「{{ row.name }}」吗？
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
                                                     关闭
                                                 </button>
                                                 <button type="submit"
                                                         name="delete"
                                                         value="delete"
-                                                        class="btn btn-danger">确定
+                                                        class="btn btn-outline-primary">确定
                                                 </button>
                                             </div>
                                         </div>

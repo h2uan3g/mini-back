@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap5
-from flask_ckeditor import CKEditor
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -24,12 +23,11 @@ naming_convention = {
 }
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 pagedown = PageDown()
-ckeditor = CKEditor()
 csrf = CSRFProtect()
 cors = CORS()
 
 
-def create_app(config_name):
+def create_app(config_name='default'):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -39,7 +37,6 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
-    ckeditor.init_app(app)
     csrf.init_app(app)
     cors.init_app(app, resources={r"/api/*": {"origins": r"http://localhost:\d+"}})
 

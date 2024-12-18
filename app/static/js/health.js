@@ -21,7 +21,6 @@ $(document).ready(function () {
             showSelectedFiles: true,
             totalFileCount: 1,
             showPreview: true,
-            height: 300,
             width: '100%',
             showRemoveButtonAfterComplete: false,
             proudlyDisplayPoweredByUppy: false,
@@ -70,7 +69,8 @@ $(document).ready(function () {
             $.each(files, function (i, file) {
                 formData.append('image', file.data);
             });
-            const body = quill.getSemanticHTML()
+
+            const body = editor.getHtml()
             formData.append('body', body);
 
             $.ajax({
@@ -93,17 +93,52 @@ $(document).ready(function () {
             });
         });
 
-        const quill = new Quill("#editor_health", {
-            modules: {
-                toolbar: '#toolbar_health'
-            },
+        const {createEditor, createToolbar} = window.wangEditor
+        const csrftoken = $('meta[name=csrf-token]').attr('content');
+        const editorConfig = {
             placeholder: '请输入...',
-            theme: "snow",
-            readOnly: status == 0,
-            locale: 'zh-CN'
-        });
+            MENU_CONF: {}
+        }
+        editorConfig.MENU_CONF['uploadImage'] = {
+            server: '/workbench/upload',
+            fieldName: 'upload',
+            timeout: 5 * 1000,
+            maxFileSize: 5 * 1024 * 1024,
+            allowedFileTypes: ['image/*'],
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            onSuccess(file, res) {
+                console.log('onSuccess', file, res)
+            },
+            onFailed(file, res) {
+                console.log('onFailed', file, res)
+            },
+        }
+
+        const editor = createEditor({
+            selector: '#editor-container',
+            html: '<p><br></p>',
+            config: editorConfig,
+            mode: 'default', // or 'simple'
+        })
+
+        const toolbarConfig = {}
+
+        const toolbar = createToolbar({
+            editor,
+            selector: '#toolbar-container',
+            config: toolbarConfig,
+            mode: 'simple', // or 'default'
+        })
+
+        if (status == 0) {
+            editor.disable()
+        } else {
+            editor.enable()
+        }
         if (healthInfo && healthInfo.body) {
-            quill.clipboard.dangerouslyPasteHTML(healthInfo.body)
+            editor.setHtml(healthInfo.body)
         }
     }
 )

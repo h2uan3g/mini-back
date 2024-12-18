@@ -6,8 +6,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
-    CKEDITOR_FILE_UPLOADER = 'workbench.upload'
-    # CKEDITOR_LANGUAGE = 'zh'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
     FLASKY_POSTS_PER_PAGE = 10

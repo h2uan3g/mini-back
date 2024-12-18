@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% from 'macros/_macros_table.html' import h_render_table %}
+{% from 'macros/_macros_pagination.html' import render_pagination %}
+{% block title %}Flasky{% endblock %}
+
+{% block page_content %}
+    <div class="card mt-4 px-1 py-1">
+        {{ h_render_table(
+                        users,
+                        titles=titles,
+                        actions_title='操作',
+                        urlize_columns=('text'),
+                        table_classes='table-striped text-center',
+                        show_actions=True,
+                        view_url=('customer.view', [('user_id', ':id')]),
+                        page=pagination.page,
+                        per_page=pagination.per_page) }}
+
+        <div class="mt-2 mb-4 ms-auto me-2">
+            {{ render_pagination(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}

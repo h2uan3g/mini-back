@@ -1,10 +1,15 @@
 import os
-import click
 import sys
+import click
 from datetime import datetime
+
+from flask import url_for
 from flask_migrate import Migrate, upgrade
 from app import create_app, db
 from app.models import User, Role, Permission, Product
+
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+migrate = Migrate(app, db)
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
@@ -13,28 +18,18 @@ if os.environ.get('FLASK_COVERAGE'):
     COV = coverage.coverage(branch=True, include='app/*')
     COV.start()
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-migrate = Migrate(app, db)
 
-
-# 自定义过滤器
-@app.template_filter('format_datetime')
-def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
-    if isinstance(value, datetime):
-        return value.strftime(format)
-    return value
-
-
-@app.shell_context_processor
-def make_shell_context():
-    return dict(db=db, User=User, Role=Role, product=Product, Permission=Permission)
+@app.cli.command('deploy')
+def deploy():
+    upgrade()
+    Role.insert_roles()
 
 
 @app.cli.command()
 @click.option('--coverage/--no-coverage', default=False,
               help='Run tests under code coverage.')
 def test(coverage):
-    """Run the unit tests."""
+    """测试覆盖率."""
     if coverage and not os.environ.get('FLASK_COVERAGE'):
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
@@ -69,11 +64,26 @@ def profile(length, profile_dir):
         app.run(debug=False)
 
 
-@app.cli.command()
-def deploy():
-    """Run deployment tasks."""
-    # migrate database to latest revision
-    upgrade()
+@app.template_filter('format_datetime')
+def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
+    """自定义时间过滤器"""
+    if isinstance(value, datetime):
+        return value.strftime(format)
+    return value
 
-    # create or update user roles
-    Role.insert_roles()
+
+@app.template_filter('format_images')
+def format_images(value):
+    """自定义时间过滤器"""
+    if ',' in value:
+        images_first = value.split(',')[0]
+        images = url_for('static', filename=f'images/{images_first}', _external=True)
+    else:
+        images = url_for('static', filename=f'images/{value}', _external=True)
+    return images
+
+
+@app.shell_context_processor
+def make_shell_context():
+    """数据库命令行"""
+    return dict(db=db, User=User, Role=Role, product=Product, Permission=Permission)
