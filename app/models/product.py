@@ -42,4 +42,11 @@ class Classify(db.Model):
     __tablename__ = 'classifys'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    product = db.relationship('Product', backref='product', lazy='dynamic')
+    product = db.relationship('Product', backref='classify', lazy='dynamic')
+
+    def to_json(self):
+        json_product = {
+            'id': self.id,
+            'name': self.name,
+        }
+        return json_product

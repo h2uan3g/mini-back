@@ -4,6 +4,7 @@ from . import db
 from .models import User
 
 
+# 测试数据
 def users(count=100):
     fake = Faker()
     i = 0

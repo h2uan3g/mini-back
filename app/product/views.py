@@ -1,6 +1,5 @@
 import json
-import os
-from flask import render_template, request, flash, url_for, redirect, current_app, jsonify
+from flask import render_template, request, flash, url_for, redirect
 from flask_login import login_required
 
 from . import product
