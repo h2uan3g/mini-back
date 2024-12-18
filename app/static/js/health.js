@@ -73,8 +73,15 @@ $(document).ready(function () {
             const body = editor.getHtml()
             formData.append('body', body);
 
+            let url = ''
+            if (healthInfo.id) {
+                url = `/workbench/${healthInfo.id}/health_edit`
+            } else {
+                url = '/workbench/health_edit'
+            }
+
             $.ajax({
-                url: `/workbench/${healthInfo.id}/health_edit`,  // 替换为你的服务器处理 URL
+                url: url,  // 替换为你的服务器处理 URL
                 type: 'POST',                   // 或 'GET'，根据需求选择
                 data: formData,                 // 提交的表单数据
                 contentType: false,

@@ -1,4 +1,5 @@
 from flask import render_template, current_app, request
+from flask_login import login_required
 
 from . import customer
 from ..auth.forms import RegistrationForm
@@ -6,6 +7,7 @@ from ..models import User
 
 
 @customer.route('/')
+@login_required
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = User.query.paginate(
@@ -20,6 +22,7 @@ def index():
 
 
 @customer.route('/<int:user_id>/view')
+@login_required
 def view(user_id):
     user = User.query.filter_by(id=user_id).first()
     form = RegistrationForm()

@@ -105,6 +105,8 @@
                 {%- else -%}
                     {%- if urlize_columns and key in urlize_columns -%}
                         {{ value|urlize }}
+                    {% elif key =='image' %}
+                        <img src="{{ value }}" alt="" style="height: 80px; width: 60px;">
                     {%- else -%}
                         {{ value }}
                     {%- endif -%}
@@ -114,14 +116,6 @@
             {%- else -%}
                 {% if key =='index' %}
                     {{ outer_index + (page-1) * per_page }}
-                {% elif key =='type' %}
-                    {% if value == 0 %}
-                        癌症知识
-                    {% elif value ==1 %}
-                        企业文化
-                    {% else %}
-                        医疗场景
-                    {% endif %}
                 {% elif key =='updateTime' %}
                     {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
                 {% else %}

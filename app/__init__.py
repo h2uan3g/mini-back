@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +25,14 @@ db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 pagedown = PageDown()
 csrf = CSRFProtect()
 cors = CORS()
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    if request.is_json:
+        return jsonify({"error": "未登录"}), 401
+    flash('未登录')
+    return redirect(url_for('auth.login'))
 
 
 def create_app(config_name='default'):

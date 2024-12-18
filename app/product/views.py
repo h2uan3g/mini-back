@@ -1,6 +1,8 @@
 import json
 import os
 from flask import render_template, request, flash, url_for, redirect, current_app, jsonify
+from flask_login import login_required
+
 from . import product
 from .. import db
 from ..models import Product, Classify
@@ -10,6 +12,7 @@ from ..utils.restful import params_error, ok
 
 
 @product.route('/')
+@login_required
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Product.query.join(Classify).filter(Classify.name != '积分商城').paginate(page=page,
@@ -24,6 +27,7 @@ def index():
 
 
 @product.route('/<int:product_id>/view')
+@login_required
 def product_view(product_id):
     type = int(request.args.get('type'))
     product = Product.query.get(product_id)
@@ -48,6 +52,7 @@ def product_view(product_id):
 
 @product.route('/<int:product_id>/edit', methods=['GET', 'POST'])
 @product.route('/edit', methods=['GET', 'POST'])
+@login_required
 def product_edit(product_id=None):
     type = int(request.args.get('type'))
     if product_id is None:
@@ -100,6 +105,7 @@ def product_edit(product_id=None):
 
 
 @product.route('/<int:product_id>/delete', methods=['POST'])
+@login_required
 def product_delete(product_id=None):
     product = Product.query.get(product_id)
     image1 = product.image1
@@ -116,6 +122,7 @@ def product_delete(product_id=None):
 
 
 @product.route('/credits')
+@login_required
 def credits():
     page = request.args.get('page', 1, type=int)
     pagination = Product.query.join(Classify).filter(Classify.name == '积分商城').paginate(page=page, per_page=12)
@@ -129,6 +136,7 @@ def credits():
 
 
 @product.route('/classify')
+@login_required
 def classify():
     page = request.args.get('page', 1, type=int)
     pagination = Classify.query.paginate(page=page, per_page=10)
@@ -142,6 +150,7 @@ def classify():
 
 
 @product.route('/classify/<int:classify_id>/view')
+@login_required
 def classify_view(classify_id):
     classify = Classify.query.get(classify_id)
     form = ClassifyForm()
@@ -156,6 +165,7 @@ def classify_view(classify_id):
 
 @product.route('/classify/<int:classify_id>/edit', methods=['GET', 'POST', 'DELETE'])
 @product.route('/classify/edit', methods=['GET', 'POST'])
+@login_required
 def classify_edit(classify_id=None):
     if classify_id is None:
         classify = Classify()
@@ -178,6 +188,7 @@ def classify_edit(classify_id=None):
 
 
 @product.route('/classify/<int:classify_id>/delete', methods=['POST'])
+@login_required
 def classify_delete(classify_id):
     classify = Classify.query.get(classify_id)
     if product is None:

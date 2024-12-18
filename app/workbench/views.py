@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 
 from flask import render_template, send_from_directory, url_for, request, current_app, flash, redirect, jsonify
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 
 from . import workbench
@@ -13,18 +14,24 @@ from ..utils import save_single_file, params_error, ok
 
 
 @workbench.route('/', methods=['GET'])
+@login_required
 def index():
     topImages = TopImage.query.all()
     form = TopImageForm()
     titles = [('id', '序号'), ('type', '类型'), ('image', '图片')]
+    type_map = {0: "癌症知识", 1: "企业文化", 2: "医疗场景"}
+    items_list = [{"id": image.id,
+                   "image": url_for('static', filename=f'images/{image.image}', _external=True) if image else "",
+                   "type": type_map[image.type]} for image in topImages]
     return render_template('workbench/index.html',
                            form=form,
                            titles=titles,
-                           topImages=topImages,
+                           topImages=items_list,
                            show_top_image=True)
 
 
 @workbench.route('/<int:top_image_id>/view')
+@login_required
 def top_image_view(top_image_id):
     topImage = TopImage.query.get(top_image_id)
     form = TopImageForm()
@@ -40,6 +47,7 @@ def top_image_view(top_image_id):
 
 
 @workbench.route('/<int:top_image_id>/edit', methods=['GET', 'POST'])
+@login_required
 def top_image_edit(top_image_id):
     topImage = TopImage.query.get(top_image_id)
     form = TopImageForm()
@@ -81,18 +89,32 @@ def top_image_edit(top_image_id):
 
 
 @workbench.route('/health', methods=['GET'])
+@login_required
 def health():
     health = Health.query.all()
     form = HealthForm()
     titles = [('id', '序号'), ('type', '类型'), ('title', '标题'), ('auth', '作者'), ('updateTime', '修改时间')]
+    type_map = {0: "肝癌", 1: "肺病", 2: "卵巢痣",
+                3: "乳腺痛", 4: "食管癌", 5: "肾癌",
+                6: "旸癢", 7: "胰腺瘺", 8: "子宫癌",
+                9: "前列腺痛", 10: "甲状腺癌", 11: "胃癌"}
+    health_list = [
+        {"id": heal.id,
+         "image": url_for('static', filename=f'images/{heal.coverImage}', _external=True) if heal.coverImage else "",
+         "type": type_map[heal.type],
+         "auth": heal.auth,
+         "isAd": 0,
+         "updateTime": heal.updateTime,
+         "title": heal.title} for heal in health]
     return render_template('workbench/index.html',
                            form=form,
                            titles=titles,
-                           health=health,
+                           health=health_list,
                            show_top_image=False)
 
 
 @workbench.route('/<int:health_id>/health_view')
+@login_required
 def health_view(health_id):
     health = Health.query.get(health_id)
     form = HealthForm()
@@ -112,6 +134,7 @@ def health_view(health_id):
 
 @workbench.route('/<int:health_id>/health_edit', methods=['GET', 'POST'])
 @workbench.route('/health_edit', methods=['GET', 'POST'])
+@login_required
 def health_edit(health_id=None):
     if health_id is None:
         health = Health()
@@ -134,6 +157,7 @@ def health_edit(health_id=None):
             else:
                 healthPre = Health()
             save_file = save_single_file(image)
+            healthPre.type = type
             healthPre.coverImage = save_file
             healthPre.auth = form.auth.data
             healthPre.title = form.title.data
@@ -142,19 +166,8 @@ def health_edit(health_id=None):
             db.session.add(healthPre)
             db.session.commit()
             return jsonify({'redirect': url_for('.health')})
-    elif form.image.errors and form.image.data:
-        # 图片未修改
-        type = form.type.data
-        healthPre = Health.query.filter_by(type=type).first()
-        healthPre.auth = form.auth.data
-        healthPre.title = form.title.data
-        healthPre.updateTime = datetime.now()
-        healthPre.body = form.body.data
-        db.session.add(healthPre)
-        db.session.commit()
-        return jsonify({'redirect': url_for('.health')})
-    else:
-        print(form.errors)
+    elif form.errors:
+        return params_error(message=f'{form.errors}')
     form.type.data = health.type
     form.title.data = health.title
     form.auth.data = health.auth
@@ -168,6 +181,7 @@ def health_edit(health_id=None):
 
 
 @workbench.route('/upload', methods=['POST'])
+@login_required
 def upload():
     f = request.files.get('upload')
     if f:
@@ -182,6 +196,7 @@ def upload():
 
 
 @workbench.route('/files/<path:filename>')
+@login_required
 def uploaded_files(filename):
     path = os.path.join(current_app.config['UPLOAD_FOLDER'])
     return send_from_directory(path, filename)

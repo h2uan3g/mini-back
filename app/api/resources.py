@@ -35,7 +35,7 @@ def health():
          "type": type_map[heal.type],
          "auth": heal.auth,
          "isAd": 0,
-         "updateTime": "2024-12-1",
+         "updateTime": heal.updateTime.strftime("%Y-%m-%d"),
          "title": heal.title} for heal in health]
     if health_list is None:
         return jsonify({
