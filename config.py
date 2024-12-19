@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -16,6 +17,7 @@ class Config:
     WEIXIN_SECRET = '828da3fe428badade888fc6f92ceacf3'
     UPLOAD_FOLDER = os.path.join(basedir, './app/static/images')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=6)
 
     @staticmethod
     def init_app(app):

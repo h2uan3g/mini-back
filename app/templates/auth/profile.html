@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block page_content %}
+    <div class="card mx-auto w-50 mt-5 px-3 py-3">
+        <form method="POST"
+              enctype="multipart/form-data" id="productForm">
+            <div class="row">
+                <div class="col-3 my-auto">{{ form.avatar.label }}</div>
+                <div class="col-9">
+                    <img src="{{ form.avatar.data }}" class="rounded-circle border border-1 border-opacity-50" alt=""
+                                        style="height: 100px; width:100px;"></div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-3 my-auto">{{ form.name.label }}</div>
+                <div class="col-9">{{ form.name(class='form-control', disabled=status==0) }}</div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-3 my-auto">{{ form.email.label }}</div>
+                <div class="col-9">{{ form.email(class='form-control', disabled=status==0) }}</div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-3 my-auto">{{ form.location.label }}</div>
+                <div class="col-9">{{ form.location(class='form-control', disabled=status==0) }}</div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-3">{{ form.about_me.label }}</div>
+                <div class="col-9">{{ form.about_me(class='form-control', disabled=status==0) }}</div>
+            </div>
+
+            <div class="mt-4 float-end">
+                <button
+                        type="button"
+                        onclick="window.history.back();"
+                        class="btn btn-primary">返回
+                </button>
+                {% if status != 0 %}
+                    <button name="submit" id="submit"
+                            type="submit" class="btn btn-outline-primary ms-3">提交
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

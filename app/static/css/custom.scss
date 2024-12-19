@@ -104,9 +104,22 @@ body {
 
 .multi-line-two {
   line-height: 1.5em; /* 设置单行高度 */
-  min-height: 3em;   /* 至少两行高度（1.5em * 2）*/
+  min-height: 3em; /* 至少两行高度（1.5em * 2）*/
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2; /* 设置显示的行数 */
   overflow: hidden;
+}
+
+#custom-dropdown {
+  background-color: #f5f5f5 !important;
+
+  .dropdown-item {
+    color: #333 !important;
+
+    &:hover {
+      background-color: $primary !important;
+      color: #fff !important;
+    }
+  }
 }

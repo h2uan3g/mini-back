@@ -20,7 +20,7 @@
 <body>
 {% block navbar %}
     <header data-bs-theme="dark">
-        <nav class="navbar navbar-expand-md fixed-top" data-bs-theme="dark" style="background-color: #754ffe">
+        <nav class="navbar navbar-expand-md fixed-top" style="background-color: #754ffe">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url_for('main.index') }}">
                     <i class="bi bi-explicit"></i>
@@ -50,16 +50,20 @@
                         </li>
 
                         {% if current_user.is_authenticated %}
-                            <li class="nav-item dropdown my-auto">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            <li class="nav-item dropdown-center btn-group my-auto">
+                                <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown"
                                    aria-expanded="false">
                                     <img class="rounded-circle me-2"
                                          style="width: 28px; height: 28px;"
                                          size="20"
-                                         src="{{ url_for('static', filename='/images/head.png') }}"> {{ current_user.username }}
+                                         src="{{ current_user.gravatar() }}"> {{ current_user.username }}
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" role="button"
+                                <ul id="custom-dropdown" class="custom-dropdown-menu dropdown-menu">
+                                     <li><a class="dropdown-item" role="button" type="button"
+                                           href="{{ url_for('auth.profile') }}">个人信息</a>
+                                    </li>
+                                     <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" role="button" type="button"
                                            href="{{ url_for('auth.logout') }}">退出</a>
                                     </li>
                                 </ul>

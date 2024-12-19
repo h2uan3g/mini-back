@@ -92,4 +92,15 @@ body {
   overflow: hidden;
 }
 
+#custom-dropdown {
+  background-color: #f5f5f5 !important;
+}
+#custom-dropdown .dropdown-item {
+  color: #333 !important;
+}
+#custom-dropdown .dropdown-item:hover {
+  background-color: #754ffe !important;
+  color: #fff !important;
+}
+
 /*# sourceMappingURL=custom.css.map */

@@ -76,7 +76,7 @@ def top_image_edit(top_image_id):
             return jsonify({'redirect': url_for('.index')})
     elif form.image.errors and form.image.data:
         # 图片未修改
-        print(form.errors)
+        current_app.logger.info(form.errors)
         return jsonify({'redirect': url_for('.index')})
     else:
         print(form.errors)

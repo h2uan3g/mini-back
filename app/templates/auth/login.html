@@ -6,17 +6,6 @@
 {% block page_content %}
     <div style="width: 30vw;" class="card border border-1 rounded shadow px-3 py-5  mt-5 mx-auto">
         <h3>登录</h3>
-        {#        <div>#}
-        {#            {{ render_form(form) }}#}
-        {##}
-        {##}
-        {#            <div>#}
-
-        {#            </div>#}
-        {#            <br>#}
-        {#            <p>新用户注册? <a href="{{ url_for('auth.register') }}">点击注册</a>.</p>#}
-        {#        </div>#}
-
         <form method="POST" enctype="multipart/form-data">
             {{ form.csrf_token }}
             <div class="row mt-3">
