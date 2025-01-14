@@ -36,10 +36,10 @@
                         <li class="nav-item my-auto">
                             <a class="nav-link my-auto" href="{{ url_for('main.index') }}">首页</a>
                         </li>
-                        <li class="nav-item my-auto">
+                        <li class="nav-item my-auto me-auto">
                             <a class="nav-link" href="{{ url_for('visual.index') }}">数据管理</a>
                         </li>
-                        <li class="nav-item my-auto">
+                        <!-- <li class="nav-item my-auto">
                             <a class="nav-link" href="{{ url_for('customer.index') }}">客户</a>
                         </li>
                         <li class="nav-item my-auto">
@@ -47,7 +47,7 @@
                         </li>
                         <li class="nav-item my-auto me-auto">
                             <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
-                        </li>
+                        </li> -->
 
                         {% if current_user.is_authenticated %}
                             <li class="nav-item dropdown-center btn-group my-auto">

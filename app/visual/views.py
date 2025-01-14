@@ -1,18 +1,25 @@
-from flask import render_template
+from datetime import datetime
+from flask import current_app, flash, json, redirect, render_template, request, url_for
 from flask_login import login_required
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Line
-
+from app.models.document import Document
+from app.utils.file import add_image_watermark_docx, save_file
+from app.utils.numbers import decimal_default
+from app.utils.restful import ok, params_error
+from app.visual.forms import DocumentForm
+from ..utils import decimal_default, save_file, delete_file
 from . import visual
+from .. import db
 
 
-@visual.route('/')
+@visual.route("/chart")
 @login_required
-def index():
+def chart():
     c_product = (
         Bar()
         .add_xaxis(["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"])
-        .add_yaxis("销售量", [5, 20, 36, 10, 75, 90], color='#754ffe')
+        .add_yaxis("销售量", [5, 20, 36, 10, 75, 90], color="#754ffe")
         .set_global_opts(title_opts=opts.TitleOpts(title="近一个月销售Top6"))
     )
     c_customer = (
@@ -32,11 +39,87 @@ def index():
             y_axis=[820, 932, 901, 934, 1290, 1330, 1320],
             symbol="emptyCircle",
             is_symbol_show=True,
-            color='#754ffe',
+            color="#754ffe",
             label_opts=opts.LabelOpts(is_show=False),
         )
         .set_global_opts(title_opts=opts.TitleOpts(title="近一个月注册用户"))
     )
-    return render_template('visual.html',
-                           data1=c_product.dump_options_with_quotes(),
-                           data2=c_customer.dump_options_with_quotes())
+    return render_template(
+        "visual/idnex.html",
+        data1=c_product.dump_options_with_quotes(),
+        data2=c_customer.dump_options_with_quotes(),
+    )
+
+
+@visual.route("/")
+@login_required
+def index():
+    page = request.args.get("page", 1, type=int)
+    pagination = Document.query.paginate(page=page, per_page=10)
+    titles = [
+        ("index", "序号"),
+        ("title", "标题"),
+        ("update_time", "更新时间"),
+    ]
+    docs_orgin = pagination.items
+    docs = [
+        {
+            "id": doc.id,
+            "title": doc.title,
+            "update_time": doc.update_time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        for doc in docs_orgin
+    ]
+    return render_template(
+        "visual/index.html", pagination=pagination, titles=titles, docs=docs
+    )
+
+
+@visual.route("/<int:visual_id>/detail", methods=["GET", "POST"])
+@visual.route("/detail", methods=["GET", "POST"])
+@login_required
+def visual_view(visual_id=None):
+    if visual_id is None:
+        document = Document()
+        status = 2
+    else:
+        document = Document.query.get(visual_id)
+    form = DocumentForm()
+    if document is None:
+        flash("数据查询失败")
+        return redirect(url_for(".index"))
+    if form.validate_on_submit():
+        form.title.data = form.title.data
+        source = form.source.data
+        watermark = form.watermark.data
+        source_file = save_file(source, "UPLOAD_FOLDER_DOCS")
+        watermark_file = save_file(watermark, "UPLOAD_FOLDER")
+        # 处理水印
+        out_file = add_image_watermark_docx(source_file, watermark_file)
+        document.title = form.title.data
+        document.create_time = datetime.now()
+        document.update_time = datetime.now()
+        document.source_url = url_for(
+            "static", filename=f"docs/{source_file}", _external=True
+        )
+        document.water_url = url_for(
+            "static", filename=f"docs/{watermark_file}", _external=True
+        )
+        document.resutl_url = out_file
+        db.session.add(document)
+        db.session.commit()
+        return ok(
+            message="ok", data={"result": out_file, "redirect": url_for(".index")}
+        )
+    elif form.errors:
+        flash(f"请检查输入:", form.errors)
+        return params_error(message=form.errors)
+
+    form.title.data = document.title
+    return render_template(
+        "visual/v_edit.html",
+        document=json.dumps(document.to_json(), default=decimal_default),
+        status=status,
+        type=type,
+        form=form,
+    )

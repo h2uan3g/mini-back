@@ -16,6 +16,7 @@ class Config:
     WEIXIN_APPID = 'wxb05474b2220f2fd8'
     WEIXIN_SECRET = '828da3fe428badade888fc6f92ceacf3'
     UPLOAD_FOLDER = os.path.join(basedir, './app/static/images')
+    UPLOAD_FOLDER_DOCS = os.path.join(basedir, 'app/static/docs')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     PERMANENT_SESSION_LIFETIME = timedelta(hours=6)
 
@@ -27,7 +28,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'data-development.sqlite')
+                              'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
 
 class TestingConfig(Config):

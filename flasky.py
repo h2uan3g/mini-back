@@ -7,6 +7,7 @@ from flask import url_for
 from flask_migrate import Migrate, upgrade
 from app import create_app, db
 from app.models import User, Role, Permission, Product
+from app.models.document import Document
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
@@ -86,4 +87,4 @@ def format_images(value):
 @app.shell_context_processor
 def make_shell_context():
     """数据库命令行"""
-    return dict(db=db, User=User, Role=Role, product=Product, Permission=Permission)
+    return dict(db=db, User=User, Role=Role, product=Product, Permission=Permission, Document=Document)
