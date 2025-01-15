@@ -103,4 +103,20 @@ body {
   color: #fff !important;
 }
 
+#preview-contain {
+  white-space: pre-wrap;
+  text-align: left;
+  padding: 20px 30px;
+  background-color: rgb(212, 212, 215);
+}
+#preview-contain .docx-contain {
+  width: 60%;
+  padding: 20px 30px;
+  background-color: #fff;
+}
+#preview-contain canvas {
+  display: block;
+  border: 1px solid #ddd;
+}
+
 /*# sourceMappingURL=custom.css.map */

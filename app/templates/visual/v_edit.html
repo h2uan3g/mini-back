@@ -5,7 +5,7 @@
     <div class="card p-5 m-5">
         <form method="POST"
               enctype="multipart/form-data" id="documentForm">
-            <div id="documentFormInfo" data-product="{{ document }}"></div>
+            <div id="documentFormInfo" data-document="{{ document }}"></div>
             <div id="documentStatus" data-status="{{ status }}"></div>
             <div id="documentType" data-type="{{ type }}"></div>
             {{ form.csrf_token }}
@@ -15,6 +15,7 @@
                 <div class="col-10">{{ form.title(class='form-control', disabled=status == 0) }}</div>
             </div>
 
+            {% if status != 0 %}
             <div class="mt-3 row">
                 <span class="col-2 text-start">{{ form.source.label }}</span>
                 <div class="col-10">
@@ -28,6 +29,16 @@
                     <div id="visual-watermark-area"></div>
                 </div>
             </div>
+            {% endif %}
+
+            {% if status == 0 %}
+                <div class="mt-3 row">
+                    <span class="col-2 text-start"><label id="preview-label" for="preview-contain">预览:&nbsp;&nbsp;&nbsp;&nbsp;</label></span>
+                    <div class="col-10">
+                        <div id="preview-contain"></div>
+                    </div>
+                </div>
+            {% endif %}
 
             <div class="mt-4 float-end">
                 <button
@@ -47,5 +58,6 @@
 
 {% block scripts %}
     {{ super() }}
+    <script type="module" src={{ url_for('static', filename='js/pdf/pdf.min.mjs') }}></script>
     <script type="module" src={{ url_for('static', filename='js/document.js') }}></script>
 {% endblock %}

@@ -1,10 +1,11 @@
 from datetime import datetime
-from flask import current_app, flash, json, redirect, render_template, request, url_for
+import os
+from flask import app, current_app, flash, json, redirect, render_template, request, send_from_directory, url_for
 from flask_login import login_required
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Line
 from app.models.document import Document
-from app.utils.file import add_image_watermark_docx, save_file
+from app.utils.file import add_image_watermark_docx, add_image_watermark_pdf, convert_word_to_html, convert_word_to_pdf, save_file
 from app.utils.numbers import decimal_default
 from app.utils.restful import ok, params_error
 from app.visual.forms import DocumentForm
@@ -79,11 +80,15 @@ def index():
 @visual.route("/detail", methods=["GET", "POST"])
 @login_required
 def visual_view(visual_id=None):
+    status = 0  
     if visual_id is None:
         document = Document()
         status = 2
     else:
         document = Document.query.get(visual_id)
+        if document is None:
+            flash("数据查询失败")
+            return redirect(url_for(".index"))
     form = DocumentForm()
     if document is None:
         flash("数据查询失败")
@@ -95,7 +100,13 @@ def visual_view(visual_id=None):
         source_file = save_file(source, "UPLOAD_FOLDER_DOCS")
         watermark_file = save_file(watermark, "UPLOAD_FOLDER")
         # 处理水印
-        out_file = add_image_watermark_docx(source_file, watermark_file)
+        if len(source) > 0:
+            if source[0].filename.endswith("pdf"):
+                out_file = add_image_watermark_pdf(source_file, watermark_file) 
+            else:
+                out_file = add_image_watermark_docx(source_file, watermark_file)
+        else:
+            return params_error(message="请上传文件")
         document.title = form.title.data
         document.create_time = datetime.now()
         document.update_time = datetime.now()
@@ -105,7 +116,7 @@ def visual_view(visual_id=None):
         document.water_url = url_for(
             "static", filename=f"docs/{watermark_file}", _external=True
         )
-        document.resutl_url = out_file
+        document.result_url = out_file
         db.session.add(document)
         db.session.commit()
         return ok(
@@ -123,3 +134,9 @@ def visual_view(visual_id=None):
         type=type,
         form=form,
     )
+
+
+@visual.route('/result/<filename>')
+def visual_result(filename):
+    content = convert_word_to_html(filename)
+    return ok(message="ok", data=content)

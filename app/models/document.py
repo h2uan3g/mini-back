@@ -8,7 +8,7 @@ class Document(db.Model):
     title = db.Column(db.String(64))
     source_url = db.Column(db.String(128))
     water_url = db.Column(db.String(128))
-    resutl_url = db.Column(db.String(128))
+    result_url = db.Column(db.String(128))
     create_time = db.Column(db.DateTime)
     update_time = db.Column(db.DateTime)
     status = db.Column(db.Integer)
@@ -24,7 +24,7 @@ class Document(db.Model):
             'title': self.title,
             'source_url': self.source_url,
             'water_url': self.water_url,
-            'resutl_url': self.resutl_url,
+            'result_url': self.result_url,
             'create_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S'),
             'update_time': self.update_time.strftime('%Y-%m-%d %H:%M:%S'),
             'status':self.status
