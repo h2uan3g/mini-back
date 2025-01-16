@@ -45,8 +45,11 @@
                         <li class="nav-item my-auto">
                             <a class="nav-link" href="{{ url_for('workbench.index') }}">工作台</a>
                         </li>
-                        <li class="nav-item my-auto me-auto">
+                        <li class="nav-item my-auto">
                             <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
+                        </li>
+                        <li class="nav-item my-auto me-auto">
+                            <a class="nav-link" href="{{ url_for('doc.index') }}">文档编辑</a>
                         </li>
 
                         {% if current_user.is_authenticated %}

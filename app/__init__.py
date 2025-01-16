@@ -66,6 +66,9 @@ def create_app(config_name='default'):
     from .product import product as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/product')
 
+    from .document import doc as doc_blueprint
+    app.register_blueprint(doc_blueprint, url_prefix='/doc')
+
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
 
