@@ -2,11 +2,11 @@
 {% from 'bootstrap5/form.html' import render_form %}
 
 {% block content %}
-    <div class="card p-5 m-5 w-75 mx-auto" id="health-valuable">
-        <form method="POST" id="healthForm" enctype="multipart/form-data">
-            <div id="healthInfo"
-                 data-health-info="{{ healthInfo }}"></div>
-            <div id="healthInfoIsView"
+    <div class="card p-5 m-5 w-75 mx-auto" id="news-valuable">
+        <form method="POST" id="newsForm" enctype="multipart/form-data">
+            <div id="newsInfo"
+                 data-news-info="{{ newsInfo }}"></div>
+            <div id="newsInfoIsView"
                  data-status="{{ status }}"></div>
             {{ form.csrf_token }}
             <div class="row">
@@ -24,7 +24,7 @@
             <div class="row mt-3">
                 <div class="col-1">{{ form.image.label }}</div>
                 <div class="col-11">
-                    <div id="health-image-area"></div>
+                    <div id="news-image-area"></div>
                 </div>
             </div>
 
@@ -57,5 +57,5 @@
 {% block scripts %}
     {{ super() }}
     <script type="module" src="{{ url_for('static', filename='js/editor/wangeditor.min.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/health.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/news.js') }}"></script>
 {% endblock %}

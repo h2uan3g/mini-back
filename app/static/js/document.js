@@ -122,9 +122,9 @@ $(document).ready(async () => {
 
                 let url = ""
                 if (documentEl && documentEl.id) {
-                    url = `/visual/${documentEl.id}/detail`
+                    url = `/doc/${documentEl.id}/detail`
                 } else {
-                    url = `/visual/detail`
+                    url = `/doc/detail`
                 }
 
                 $.ajax({
@@ -181,9 +181,4 @@ $(document).ready(async () => {
             }
         }
     }
-
-
-
-
-
 })

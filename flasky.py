@@ -12,6 +12,7 @@ from app.models.document import Document
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
 
+
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
     import coverage
@@ -63,25 +64,6 @@ def profile(length, profile_dir):
                                       profile_dir=profile_dir)
     if __name__ == "__main__":
         app.run(debug=False)
-
-
-@app.template_filter('format_datetime')
-def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
-    """自定义时间过滤器"""
-    if isinstance(value, datetime):
-        return value.strftime(format)
-    return value
-
-
-@app.template_filter('format_images')
-def format_images(value):
-    """自定义时间过滤器"""
-    if ',' in value:
-        images_first = value.split(',')[0]
-        images = url_for('static', filename=f'images/{images_first}', _external=True)
-    else:
-        images = url_for('static', filename=f'images/{value}', _external=True)
-    return images
 
 
 @app.shell_context_processor

@@ -20,7 +20,7 @@
 <body>
 {% block navbar %}
     <header data-bs-theme="dark">
-        <nav class="navbar navbar-expand-md fixed-top" style="background-color: #754ffe">
+        <nav class="navbar navbar-expand-md fixed-top header-bg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url_for('main.index') }}">
                     <i class="bi bi-explicit"></i>
@@ -49,7 +49,7 @@
                             <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
                         </li>
                         <li class="nav-item my-auto me-auto">
-                            <a class="nav-link" href="{{ url_for('doc.index') }}">文档编辑</a>
+                            <a class="nav-link" href="{{ url_for('doc.index') }}">合同管理</a>
                         </li>
 
                         {% if current_user.is_authenticated %}
@@ -94,6 +94,33 @@
             </div>
         {% endfor %}
 
+        <div class="modal fade" id="myModal" tabindex="-1"
+            aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">系统提示</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        默认内容
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                            关闭
+                        </button>
+                        <button type="submit"
+                                name="confirm"
+                                value="confirm"
+                                id="confirmButton"
+                                class="btn btn-outline-primary">确定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% block page_content %}{% endblock %}
     </main>
 {% endblock %}
@@ -101,7 +128,7 @@
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}
 </body>
 </html>

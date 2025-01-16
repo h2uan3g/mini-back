@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, request, jsonify, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
@@ -35,10 +36,27 @@ def unauthorized():
     return redirect(url_for('auth.login'))
 
 
+def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
+        if isinstance(value, datetime):
+            return value.strftime(format)
+        return value
+
+def format_images(value):
+        if ',' in value:
+            images_first = value.split(',')[0]
+            images = url_for('static', filename=f'images/{images_first}', _external=True)
+        else:
+            images = url_for('static', filename=f'images/{value}', _external=True)
+        return images
+
 def create_app(config_name='default'):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+
+    # 注册过滤器, 在注册路由之前
+    app.jinja_env.filters['format_datetime'] = format_datetime
+    app.jinja_env.filters['format_images'] = format_images
 
     bootstrap.init_app(app)
     moment.init_app(app)

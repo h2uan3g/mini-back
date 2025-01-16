@@ -24,6 +24,24 @@ def index():
                            products=products)
 
 
+@product.route('/search')
+@login_required
+def product_search():
+    search = request.args.get('search')
+    page = request.args.get('page', 1, type=int)
+    query = Product.query.join(Classify).filter(Classify.name != '积分商城')
+    if search:
+        query = query.filter(Product.name.like(f'%{search}%') | Product.introduction.like(f'%{search}%'))
+    pagination = query.paginate(page=page,per_page=10)
+    titles = [('index', '序号'), ('name', '产品名称'), ('price', '出厂价格'), ('discount', '折扣(0-1)')]
+    products = pagination.items
+    return render_template('common/table_contain.html',
+                           pagination=pagination,
+                           titles=titles,
+                           show_type=0,
+                           data=products)
+
+
 @product.route('/<int:product_id>/view')
 @login_required
 def product_view(product_id):
@@ -41,7 +59,7 @@ def product_view(product_id):
     form.credits.data = product.credits
     form.image1.data = product.image1
     form.image2.data = product.image2
-    return render_template('product/p_edit.html',
+    return render_template('product/product_edit.html',
                            product=json.dumps(product.to_json(), default=decimal_default),
                            is_view=0,
                            type=type,
@@ -95,14 +113,14 @@ def product_edit(product_id=None):
     form.classify.data = product.classify_id
     form.image1.data = product.image1
     form.image2.data = product.image2
-    return render_template('product/p_edit.html',
+    return render_template('product/product_edit.html',
                            product=json.dumps(product.to_json(), default=decimal_default),
                            form=form,
                            type=type,
                            is_view=is_view)
 
 
-@product.route('/<int:product_id>/delete', methods=['POST'])
+@product.route('/<int:product_id>/delete', methods=['DELETE'])
 @login_required
 def product_delete(product_id=None):
     product = Product.query.get(product_id)
@@ -145,6 +163,23 @@ def classify():
                            titles=titles,
                            show_type=2,
                            classify=classify)
+
+@product.route('/classify/search', methods=['GET'])
+@login_required
+def classify_search():
+    search = request.args.get('search')
+    page = request.args.get('page', 1, type=int)
+    query = Classify.query
+    if search:
+        query = query.filter(Classify.name.like(f'%{search}%'))
+    pagination = query.paginate(page=page, per_page=10)
+    titles = [('index', '序号'), ('name', '产品分类')]
+    classify = pagination.items
+    return render_template('common/table_contain.html',
+                           pagination=pagination,
+                           titles=titles,
+                           show_type=2,
+                           data=classify)
 
 
 @product.route('/classify/<int:classify_id>/view')

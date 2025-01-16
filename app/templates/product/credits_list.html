@@ -2,7 +2,7 @@
 {% from 'bootstrap5/table.html' import render_table %}
 {% from 'macros/_macros_table.html' import h_render_table %}
 
-<div class="d-flex flex-column align-items-center py-4 my-2">
+<div class="card px-3 py-4">
     <div class="w-100">
         <div class="py-3 bg-body-tertiary">
             <div class="container">
@@ -10,7 +10,7 @@
                     {% for item in product %}
                         <div class="col">
                             <div class="card shadow-sm">
-                                <img src="{{ item.image1 | format_images }}" class="w-100 card-img-top"
+                                <img src="{{ item.image1|format_images }}" class="w-100 card-img-top"
                                      style="height: 225px">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ item.name }}</h5>
@@ -33,7 +33,6 @@
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="modal fade" id="deleteCreditsModal{{ item.id }}" tabindex="-1"
                                  aria-labelledby="exampleeCreditsModalLabel"
@@ -69,7 +68,7 @@
     </div>
 
     <div class="mt-5">
-        {{ render_pagination(pagination) }}
+        {{ render_pagination(pagination, align='right', size='sm') }}
     </div>
 </div>
 

@@ -1,0 +1,83 @@
+{% from 'bootstrap5/pagination.html' import render_pagination %}
+{% from 'bootstrap5/table.html' import render_table %}
+{% from 'macros/_macros_table.html' import h_render_table %}
+
+<div class="card px-3 py-4">
+    <div class="w-100">
+        <div class="d-flex justify-content-between mb-3">
+            <form class="d-flex form-search" role="search" id="search-form-product">
+                <i class="bi bi-search search-icon"></i>
+                <input class="form-control search-input  me-2" type="search" placeholder="查询" aria-label="Search">
+                <button class="btn btn-outline-success d-none" type="submit">Search</button>
+            </form>
+    
+            <div class="text-end">
+                <a title="new" href="{{ url_for('product.product_edit', type=1) }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
+            </div>
+        </div>
+
+        <div id="table-container-product">
+            {{ h_render_table(
+                products,
+                titles=titles,
+                actions_title='操作',
+                urlize_columns=('text'),
+                table_classes='table-striped text-center',
+                show_actions=True,
+                delete_modal=True,
+                delete_url=('product.product_delete', [('product_id', ':id')]),
+                view_url=('product.product_view', [('product_id', ':id'), ('type', '1')]),
+                edit_url=('product.product_edit', [('product_id', ':id'), ('type', '1')]),
+                page=pagination.page,
+                per_page=pagination.per_page) }}
+
+            <div class="mt-4">
+                {{ render_pagination(pagination, size='sm', align='right') }}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
+<script>
+   function deleteModel(el) {
+      let title = el.dataset.title
+      let name = el.dataset.name
+      let data = name || title || ''
+      let id = el.dataset.id
+      let url = el.dataset.url
+      showModal(`确定要删除「${data}」吗？`, function () {
+         $.ajax({
+            url: `${url}`,
+            type: 'DELETE',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+               if (response.data && response.data.redirect) {
+                  window.location.href = response.data.redirect;
+               }
+            },
+            error: function (xhr, status, error) {
+               showModal(`提交失败!!! ${error}`)
+            }
+         });
+      })
+   }
+
+   $('#search-form-product input').on('input', function (e) {
+        let search = $(this).val()
+        $.ajax({
+            url: `/product/search?search=${search}`,
+            type: 'GET',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $("#table-container-product").html(response)
+            },
+            error: function (xhr, status, error) {
+                console.log("error", error)
+            }
+        });
+    })
+</script>

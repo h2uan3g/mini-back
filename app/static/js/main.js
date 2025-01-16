@@ -1,3 +1,20 @@
+const showModal = (message, onconfirm) => {
+    let myModalEL = document.getElementById('myModal')
+    myModalEL.addEventListener('show.bs.modal', function () {
+        myModalEL.setAttribute('aria-hidden', 'false');
+    });
+    myModalEL.addEventListener('hidden.bs.modal', function () {
+        myModalEL.setAttribute('aria-hidden', 'true');
+    });
+    let myModal = new bootstrap.Modal(myModalEL);
+    $('#myModal .modal-body').html(message);
+    $('#confirmButton').on('click', () => {
+        myModal.hide()
+        onconfirm()
+    })
+    myModal.show();
+}
+
 $(document).ready(() => {
 
     $('#register-back').on('click', () => {

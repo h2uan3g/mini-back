@@ -1,17 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms.fields.choices import RadioField, SelectField
+from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField, StringField, TextAreaField
 from wtforms.validators import DataRequired
 
 
 class TopImageForm(FlaskForm):
-    type = RadioField('栏目：',
-                      choices=[
-                          (0, '癌症知识'),
-                          (1, '企业文化'),
-                          (2, '医疗场景'),
-                      ],
+    title = StringField('标题：',
                       validators=[DataRequired()],
                       default=0, )
 
@@ -24,7 +19,7 @@ class TopImageForm(FlaskForm):
     submit = SubmitField('提交')
 
 
-class HealthForm(FlaskForm):
+class NewsForm(FlaskForm):
     type = SelectField('分类：',
                        choices=[
                            (0, '肝癌'),

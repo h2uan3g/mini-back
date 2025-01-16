@@ -24,11 +24,11 @@
         </ul>
 
         {% if show_type == 0 %}
-            {% include 'product/p_product.html' %}
+            {% include 'product/product_list.html' %}
         {% elif show_type == 1 %}
-            {% include 'product/p_credits.html' %}
+            {% include 'product/credits_list.html' %}
         {% else %}
-            {% include 'product/p_classify.html' %}
+            {% include 'product/classify_list.html' %}
         {% endif %}
 
     </div>

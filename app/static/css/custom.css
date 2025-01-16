@@ -2,49 +2,99 @@
 body {
   padding-top: 3rem;
   padding-bottom: 3rem;
-  color: rgb(var(--bs-tertiary-color-rgb));
+  background-color: #E5E6EC;
+}
+
+.header-bg {
+  background-color: #2F51E9;
+}
+
+/********** 
+  * 
+  *  button
+  *    
+ ***********/
+.btn-top {
+  padding: 0.3rem 1rem;
+  border-radius: 1.6rem;
+  font-size: 0.8rem;
+}
+
+.btn-bottom {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  margin: 0 0.2rem;
 }
 
 .btn-primary {
-  background-color: #754ffe;
-  border-color: #754ffe;
+  background-color: #2F51E9;
+  border-color: #2F51E9;
 }
 .btn-primary:hover {
   background-color: white;
-  color: #754ffe;
+  color: #2F51E9;
 }
 
 .btn-outline-primary {
-  border-color: #754ffe;
-  color: #754ffe;
+  border-color: #2F51E9;
+  color: #2F51E9;
 }
 .btn-outline-primary:hover {
   color: white !important;
-  background-color: #754ffe;
+  background-color: #2F51E9;
 }
 
 .active > .page-link {
   color: white;
-  background-color: #754ffe;
-  border-color: #754ffe;
+  background-color: #2F51E9;
+  border-color: #2F51E9;
 }
 
 .page-link {
-  color: #754ffe;
+  color: #2F51E9;
 }
 
+.floating-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 120px;
+  z-index: 1030;
+  /* 确保按钮在其他内容之上 */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #2F51E9;
+  /* 颜色可以根据需要更改 */
+  color: white;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 1px 18px rgba(0, 0, 0, 0.12), 0 3px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+.floating-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+/********** 
+  * 
+  *  nav
+  *    
+ ***********/
 .workbench-tabs .nav-item .nav-link {
-  color: #754ffe;
+  color: #2F51E9;
   background-color: #fff;
-  border-bottom: 1px solid #754ffe;
+  border-bottom: 1px solid #2F51E9;
 }
 .workbench-tabs .nav-item .nav-link:hover {
   color: #fff;
-  background-color: #754ffe;
+  background-color: #2F51E9;
 }
 .workbench-tabs .nav-item .nav-link.active {
   color: #fff;
-  background-color: #754ffe;
+  background-color: #2F51E9;
 }
 
 .featurette-heading {
@@ -61,34 +111,15 @@ body {
     font-size: 50px;
   }
 }
-.floating-btn {
-  position: fixed;
-  bottom: 90px;
-  right: 120px;
-  z-index: 1030; /* 确保按钮在其他内容之上 */
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: #754ffe; /* 颜色可以根据需要更改 */
-  color: white;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 1px 18px rgba(0, 0, 0, 0.12), 0 3px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease-in-out;
-}
-.floating-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-}
-
 .multi-line-two {
-  line-height: 1.5em; /* 设置单行高度 */
-  min-height: 3em; /* 至少两行高度（1.5em * 2）*/
+  line-height: 1.5em;
+  /* 设置单行高度 */
+  min-height: 3em;
+  /* 至少两行高度（1.5em * 2）*/
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 设置显示的行数 */
+  -webkit-line-clamp: 2;
+  /* 设置显示的行数 */
   overflow: hidden;
 }
 
@@ -99,7 +130,7 @@ body {
   color: #333 !important;
 }
 #custom-dropdown .dropdown-item:hover {
-  background-color: #754ffe !important;
+  background-color: #2F51E9 !important;
   color: #fff !important;
 }
 
@@ -117,6 +148,67 @@ body {
 #preview-contain canvas {
   display: block;
   border: 1px solid #ddd;
+}
+
+/********** 
+  * 
+  *  pagination
+  *    
+ ***********/
+.pagination .page-item {
+  margin: 0 0.1rem;
+  padding: 0.1rem 0.1rem;
+}
+.pagination .page-item .page-link {
+  border-top-left-radius: 0.8rem !important;
+  border-top-right-radius: 0.8rem !important;
+  border-bottom-left-radius: 0.8rem !important;
+  border-bottom-right-radius: 0.8rem !important;
+  padding: 0.3rem 0.7rem;
+}
+.pagination .page-item.active .page-link {
+  background-color: #2F51E9;
+  border-color: #2F51E9;
+}
+
+/********** 
+  * 
+  *  table
+  *    
+ ***********/
+.table th {
+  padding: 0.9rem 0.5rem;
+}
+.table td {
+  padding: 0.9rem 0.5rem;
+}
+
+.table-menu {
+  min-width: 6rem;
+}
+
+/********** 
+  * 
+  *  form
+  *    
+ ***********/
+.form-search {
+  position: relative;
+  display: inline-block;
+}
+.form-search .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+}
+.form-search .search-input {
+  border-radius: 1.2rem !important;
+  font-size: 0.8rem;
+  position: relative;
+  padding-left: 30px;
 }
 
 /*# sourceMappingURL=custom.css.map */

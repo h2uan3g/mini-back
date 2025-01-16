@@ -1,15 +1,35 @@
-$primary: #754ffe;
+$primary: #2F51E9;
 $secondary: #94a3b8;
+$body-bg: #E5E6EC;
 
 
 body {
   padding-top: 3rem;
   padding-bottom: 3rem;
-  color: rgb(var(--bs-tertiary-color-rgb));
-
+  background-color: $body-bg;
 }
 
-// button
+.header-bg {
+  background-color: $primary;
+}
+
+/********** 
+  * 
+  *  button
+  *    
+ ***********/
+.btn-top {
+  padding: 0.3rem 1rem;
+  border-radius: 1.6rem;
+  font-size: 0.8rem;
+}
+
+.btn-bottom {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  margin: 0 0.2rem;
+}
+
 .btn-primary {
   background-color: $primary;
   border-color: $primary;
@@ -30,7 +50,7 @@ body {
   }
 }
 
-.active > .page-link {
+.active>.page-link {
   color: white;
   background-color: $primary;
   border-color: $primary;
@@ -40,7 +60,38 @@ body {
   color: $primary;
 }
 
-//  修改 nav-item 的默认颜色
+.floating-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 120px;
+  z-index: 1030;
+  /* 确保按钮在其他内容之上 */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: $primary;
+  /* 颜色可以根据需要更改 */
+  color: white;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, .14), 0 1px 18px rgba(0, 0, 0, .12), 0 3px 5px rgba(0, 0, 0, .2);
+  transition: all .2s ease-in-out;
+
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .19), 0 6px 6px rgba(0, 0, 0, .23);
+  }
+}
+
+
+/********** 
+  * 
+  *  nav
+  *    
+ ***********/
 .workbench-tabs {
   .nav-item {
     .nav-link {
@@ -78,36 +129,15 @@ body {
   }
 }
 
-.floating-btn {
-  position: fixed;
-  bottom: 90px;
-  right: 120px;
-  z-index: 1030; /* 确保按钮在其他内容之上 */
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: $primary; /* 颜色可以根据需要更改 */
-  color: white;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, .14), 0 1px 18px rgba(0, 0, 0, .12), 0 3px 5px rgba(0, 0, 0, .2);
-  transition: all .2s ease-in-out;
-
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, .19), 0 6px 6px rgba(0, 0, 0, .23);
-  }
-}
-
 .multi-line-two {
-  line-height: 1.5em; /* 设置单行高度 */
-  min-height: 3em; /* 至少两行高度（1.5em * 2）*/
+  line-height: 1.5em;
+  /* 设置单行高度 */
+  min-height: 3em;
+  /* 至少两行高度（1.5em * 2）*/
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 设置显示的行数 */
+  -webkit-line-clamp: 2;
+  /* 设置显示的行数 */
   overflow: hidden;
 }
 
@@ -140,5 +170,79 @@ body {
   canvas {
     display: block;
     border: 1px solid #ddd;
+  }
+}
+
+
+
+/********** 
+  * 
+  *  pagination
+  *    
+ ***********/
+.pagination {
+  .page-item {
+    margin: 0 0.1rem;
+    padding: 0.1rem 0.1rem;
+  }
+
+  .page-item .page-link {
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+    border-bottom-left-radius: 0.8rem !important;
+    border-bottom-right-radius: 0.8rem !important;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .page-item.active .page-link {
+    background-color: $primary;
+    border-color: $primary;
+  }
+}
+
+
+/********** 
+  * 
+  *  table
+  *    
+ ***********/
+.table {
+  th {
+    padding: .9rem .5rem;
+  }
+
+  td {
+    padding: .9rem .5rem;
+  }
+}
+
+.table-menu {
+  min-width: 6rem;
+}
+
+
+/********** 
+  * 
+  *  form
+  *    
+ ***********/
+.form-search {
+  position: relative;
+  display: inline-block;
+
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .search-input {
+    border-radius: 1.2rem !important;
+    font-size: 0.8rem;
+    position: relative;
+    padding-left: 30px;
   }
 }

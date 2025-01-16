@@ -5,17 +5,19 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-    <div class="card mt-4 px-1 py-1">
-        {{ h_render_table(
-                        users,
-                        titles=titles,
-                        actions_title='操作',
-                        urlize_columns=('text'),
-                        table_classes='table-striped text-center',
-                        show_actions=True,
-                        view_url=('customer.view', [('user_id', ':id')]),
-                        page=pagination.page,
-                        per_page=pagination.per_page) }}
+    <div class="card px-3 py-4 mt-5">
+        <div class="w-100">
+            {{ h_render_table(
+                users,
+                titles=titles,
+                actions_title='操作',
+                urlize_columns=('text'),
+                table_classes='table-striped text-center',
+                show_actions=True,
+                view_url=('customer.view', [('user_id', ':id')]),
+                page=pagination.page,
+                per_page=pagination.per_page) }}
+        </div>
 
         <div class="mt-2 mb-4 ms-auto me-2">
             {{ render_pagination(pagination) }}

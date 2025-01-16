@@ -41,7 +41,7 @@
                       view_url=None,
                       edit_url=None,
                       delete_url=None,
-                      delete_modal=False,
+                      delete_modal=True,
                       new_url=None,
                       action_pk_placeholder=':id',
                       page=0,
@@ -52,190 +52,153 @@
     {% if responsive %}
         <div class="{{ responsive_class }}">
     {% endif %}
-<table class="table{% if table_classes %}{{ ' ' + table_classes }}{% endif %} align-middle">
-    {% if caption %}
-        <caption>{{ caption }}</caption>
-    {% endif %}
-    <thead{% if header_classes %} class="{{ header_classes }}"{% endif %}>
-    <tr>
-        {% for title in titles %}
-            {% if title[0] == 'index' %}
-                <th scope="col" class="align-middle" style="width:6em">
-                    {{ title[1] }}
-                </th>
-            {% else %}
-                <th scope="col" class="align-middle">
-                    {{ title[1] }}
-                </th>
-            {% endif %}
-        {% endfor %}
-        {% if show_actions %}
-            <th scope="col" class="align-middle w-25">{{ actions_title }}
-                {% if new_url %}
-                    <a style="color: #754ffe;"
-                       class="action-icon text-decoration-none"
-                            {% if new_url is string %}
-                       href="{{ new_url }}"
-                            {% else %}
-                       href="{{ build_url(row, new_url[0], new_url[1], model, primary_key) | trim }}"
-                            {% endif %}
-                       title="{{ config['BOOTSTRAP_TABLE_NEW_TITLE'] }}">
-                        {{ render_icon('plus-circle-fill') }}
-                    </a>
-                {% endif %}
-            </th>
+   
+    
+    <table class="table{% if table_classes %}{{ ' ' + table_classes }}{% endif %} align-middle">
+        {% if caption %}
+            <caption>{{ caption }}</caption>
         {% endif %}
-    </tr>
-    </thead>
-    <tbody{% if body_classes %} class="{{ body_classes }}"{% endif %}>
-    {% for row in data %}
-        {% set outer_index = loop.index %}
-        <tr>
-            {% for title in titles %}
-                {% set key = title[0] %}
-                {% set value = row[key] %}
-                {%- if key == primary_key -%}
-                    <th scope="row" class="align-middle">
-                        {%- else -%}
-                    <td class="align-middle">
-                {%- endif -%}
-            {%- if value is string -%}
-                {%- if safe_columns and key in safe_columns -%}
-                    {{ value|safe }}
-                {%- else -%}
-                    {%- if urlize_columns and key in urlize_columns -%}
-                        {{ value|urlize }}
-                    {% elif key =='image' %}
-                        <img src="{{ value }}" alt="" style="height: 80px; width: 60px;">
-                    {%- else -%}
-                        {{ value }}
-                    {%- endif -%}
-                {%- endif -%}
-            {%- elif value.__class__.__base__.__name__ == 'Enum' -%}
-                {{ value.value }}
-            {%- else -%}
-                {% if key =='index' %}
-                    {{ outer_index + (page-1) * per_page }}
-                {% elif key =='updateTime' %}
-                    {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
-                {% else %}
-                    {{ value }}
+        <thead {% if header_classes %} class="{{ header_classes }}"{% endif %}>
+            <tr>
+                {% for title in titles %}
+                    {% if title[0] == 'index' %}
+                        <th scope="col" class="align-middle" style="width:3rem">
+                            {{ title[1] }}
+                        </th>
+                    {% else %}
+                        <th scope="col" class="align-middle">
+                            {{ title[1] }}
+                        </th>
+                    {% endif %}
+                {% endfor %}
+                {% if show_actions %}
+                    <th scope="col" class="align-middle" style="width:3rem">{{ actions_title }}
+                    </th>
                 {% endif %}
-            {%- endif -%}
-            {%- if key == primary_key -%}
-                </th>
-            {%- else -%}
-                </td>
-            {%- endif -%}
-            {% endfor %}
-            {% if show_actions %}
-                <td class="align-middle">
-                    {% if custom_actions %}
-                        {% for (action_name, action_icon, action_url) in custom_actions %}
-                            <a class="action-icon text-decoration-none"
-                                    {% if action_url is string %}
-                               href="{{ action_url }}"
-                                    {% else %}
-                               href="{{ build_url(row, action_url[0], action_url[1], model, primary_key) | trim }}"
-                                    {% endif %}
-                               title="{{ action_name }}">{{ render_icon(action_icon) }}</a>
-                        {% endfor %}
-                    {% endif %}
-                    {% if view_url %}
-                        <a class="btn btn-primary action-icon text-decoration-none"
-                                {% if view_url is string %}
-                           href="{{ view_url }}"
-                                {% else %}
-                           href="{{ build_url(row, view_url[0], view_url[1], model, primary_key) | trim }}"
-                                {% endif %}
-                           title="{{ config['BOOTSTRAP_TABLE_VIEW_TITLE'] }}">
-                            {{ render_icon('eye-fill') }}查看
-                        </a>
-                    {% endif %}
-                    {% if edit_url -%}
-                        <a class="btn btn-outline-primary action-icon text-decoration-none"
-                                {% if edit_url is string %}
-                           href="{{ edit_url }}"
-                                {% else %}
-                           href="{{ build_url(row, edit_url[0], edit_url[1], model, primary_key) | trim }}"
-                                {% endif %}
-                           title="{{ config['BOOTSTRAP_TABLE_EDIT_TITLE'] }}">
-                            {{ render_icon('pencil-fill') }}编辑
-                        </a>
-                    {%- endif %}
-                    {% if delete_url %}
-                        {% if delete_modal %}
-                            <form class="d-inline" method="POST"
-                                  action={{ build_url(row, delete_url[0], delete_url[1], model, primary_key) | trim }}>
-                                {% if csrf_token is undefined %}
-                                    {{ raise('You have to enable the CSRFProtect extension from Flask-WTF to use delete_url, see the docs for more details (https://bootstrap-flask.readthedocs.io/en/stable/macros.html#render-table).') }}
-                                {% endif %}
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <a type="button" class="btn btn-danger action-icon text-decoration-none"
-                                   data-id="{{ row.id }}"
-                                   data-name="{{ row.name }}"
-                                   data-bs-toggle="modal"
-                                   data-bs-target="#deleteModal{{ row.id }}">
-                                    {{ render_icon('trash-fill') }}删除
-                                </a>
-                                <div class="modal fade" id="deleteModal{{ row.id }}" tabindex="-1"
-                                     aria-labelledby="deleteModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="deleteModalLabel">系统提示</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                {% if row.title %}
-                                                    确定删除「{{ row.title }}」吗？
-                                                {% elif row.name %}
-                                                    确定删除「{{ row.name }}」吗？
-                                                {% else %}
-                                                    确定删除吗？
-                                                {% endif %}
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                                                    关闭
-                                                </button>
-                                                <button type="submit"
-                                                        name="delete"
-                                                        value="delete"
-                                                        class="btn btn-outline-primary">确定
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+            </tr>
+        </thead>
+        <tbody{% if body_classes %} class="{{ body_classes }}"{% endif %}>
+        {% for row in data %}
+            {% set outer_index = loop.index %}
+            <tr>
+                {% for title in titles %}
+                    {% set key = title[0] %}
+                    {% set value = row[key] %}
+                    {%- if key == primary_key -%}
+                        <th scope="row" class="align-middle">
+                    {%- else -%}
+                        <td class="align-middle" {% if key =='index' %} style="width:3rem" {% endif %} >
+                    {%- endif -%}
+                    {%- if value is string -%}
+                        {%- if safe_columns and key in safe_columns -%}
+                            {{ value|safe }}
+                        {%- else -%}
+                            {%- if urlize_columns and key in urlize_columns -%}
+                                {{ value|urlize }}
+                            {% elif key =='image' %}
+                                <img src="{{ value }}" alt="" style="height: 80px; width: 60px;">
+                            {%- else -%}
+                                {{ value }}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- elif value.__class__.__base__.__name__ == 'Enum' -%}
+                        {{ value.value }}
+                    {%- else -%}
+                        {% if key =='index' %}
+                            {{ outer_index + (page-1) * per_page }}
+                        {% elif key =='updateTime' %}
+                            {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
                         {% else %}
-                            <form class="d-inline"
-                                    {% if delete_url is string %}
-                                  action="{{ delete_url }}"
-                                    {% else %}
-                                  action="{{ build_url(row, delete_url[0], delete_url[1], model, primary_key) | trim }}"
-                                    {% endif %}
-                                  method="post">
-                                {% if csrf_token is undefined %}
-                                    {{ raise('You have to enable the CSRFProtect extension from Flask-WTF to use delete_url, see the docs for more details (https://bootstrap-flask.readthedocs.io/en/stable/macros.html#render-table).') }}
-                                {% endif %}
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <button type="submit" class="btn btn-link p-0 border-0 align-baseline"
-                                        title="{{ config['BOOTSTRAP_TABLE_DELETE_TITLE'] }}">
-                                    {{ render_icon('trash-fill') }}
-                                </button>
-                            </form>
+                            {{ value }}
                         {% endif %}
-                    {% endif %}
-                </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                    {%- endif -%}
+                    {%- if key == primary_key -%}
+                        </th>
+                    {%- else -%}
+                        </td>
+                    {%- endif -%}
+                {% endfor %}
+                {% if show_actions %}
+                    <td class="align-middle" style="width: 3rem;">
+                        <div class="btn-group dropstart">
+                            <i class="bi bi-three-dots-vertical" type="button" data-bs-toggle="dropdown"></i>
+                            <ul class="table-menu dropdown-menu">
+                                {% if custom_actions %}
+                                    {% for (action_name, action_icon, action_url) in custom_actions %}
+                                        <a class="dropdown-item btn btn-sm"
+                                            {% if action_url is string %}
+                                                href="{{ action_url }}"
+                                            {% else %}
+                                                href="{{ build_url(row, action_url[0], action_url[1], model, primary_key) | trim }}"
+                                            {% endif %}
+                                            title="{{ action_name }}">{{ render_icon(action_icon) }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if view_url %}
+                                    <li>
+                                        <a class="dropdown-item btn btn-sm action-icon text-decoration-none"
+                                            {% if view_url is string %}
+                                                href="{{ view_url }}"
+                                            {% else %}
+                                                href="{{ build_url(row, view_url[0], view_url[1], model, primary_key) | trim }}"
+                                            {% endif %}
+                                            title="{{ config['BOOTSTRAP_TABLE_VIEW_TITLE'] }}">{{ render_icon('eye-fill') }}查看</a>
+                                    </li>
+                                    
+                                {% endif %}
+                                {% if edit_url -%}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item btn btn-sm action-icon text-decoration-none"
+                                            {% if edit_url is string %}
+                                                href="{{ edit_url }}"
+                                            {% else %}
+                                                href="{{ build_url(row, edit_url[0], edit_url[1], model, primary_key) | trim }}"
+                                            {% endif %}
+                                            title="{{ config['BOOTSTRAP_TABLE_EDIT_TITLE'] }}">{{ render_icon('pencil-fill') }}编辑</a>
+                                    </li>
+                                {%- endif %}
+                                {% if delete_url %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    {% if delete_modal %}
+                                        <li>
+                                            <a type="button" class="dropdown-item btn btn-sm action-icon text-decoration-none"
+                                                    data-id="{{ row.id }}"
+                                                    data-name="{{ row.name }}" 
+                                                    data-title="{{ row.title }}" 
+                                                    data-url="{{ build_url(row, delete_url[0], delete_url[1], model, primary_key) | trim }}"
+                                                    onclick="deleteModel(this)" >
+                                                        {{ render_icon('trash-fill') }}删除</a>
+                                        </li> 
+                                    {% else %}
+                                        <li>
+                                            <form class="d-inline"
+                                                    {% if delete_url is string %}
+                                                action="{{ delete_url }}"
+                                                    {% else %}
+                                                action="{{ build_url(row, delete_url[0], delete_url[1], model, primary_key) | trim }}"
+                                                    {% endif %}
+                                                method="post">
+                                                {% if csrf_token is undefined %}
+                                                    {{ raise('You have to enable the CSRFProtect extension from Flask-WTF to use delete_url, see the docs for more details (https://bootstrap-flask.readthedocs.io/en/stable/macros.html#render-table).') }}
+                                                {% endif %}
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <button type="submit" class="btn btn-link p-0 border-0 align-baseline"
+                                                        title="{{ config['BOOTSTRAP_TABLE_DELETE_TITLE'] }}">
+                                                    {{ render_icon('trash-fill') }}
+                                                </button>
+                                            </form>
+                                    </li>    
+                                    {% endif %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% if responsive %}
     </div>
 {% endif %}

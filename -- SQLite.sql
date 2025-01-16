@@ -4,6 +4,9 @@
 SELECT * from roles;
 SELECT * from users;
 SELECT * from documents;
+SELECT * from top_images;
+SELECT * from news;
+SELECT * from news_types;
 
 update users SET confirmed = 1 WHERE id = 1; 
 

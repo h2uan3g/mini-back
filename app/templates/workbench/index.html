@@ -1,27 +1,28 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-    <div class="workbench-tabs mt-4">
-        <ul class="nav nav-tabs justify-content-end" role="tablist">
-            <li {% if  show_top_image %} aria-current="page" {% endif %} class="nav-item">
-                <a {% if show_top_image %} class=" nav-link active" {% else %} class="nav-link" {% endif %}
-                                           role="tab"
-                                           id="banner-tab"
-                                           href="{{ url_for('workbench.index') }}">轮播栏</a>
-            </li>
-            <li {% if not show_top_image %} aria-current="page" {% endif %} class="nav-item" }
-                                            class="nav-item">
-                <a {% if not show_top_image %} class="nav-link active" {% else %}  class="nav-link" {% endif %}
-                                               id="health-tab"
-                                               role="tab"
-                                               href="{{ url_for('workbench.health') }}">健康宝典</a>
-            </li>
-        </ul>
-        {% if show_top_image %}
-            {% include 'workbench/top_image_list.html' %}
-        {% else %}
-            {% include 'workbench/health_list.html' %}
-        {% endif %}
+<div class="workbench-tabs mt-4">
+    <ul class="nav nav-tabs justify-content-end" role="tablist">
+        <li {% if show_type == 0 %} aria-current="page" {% endif %} class="nav-item">
+            <a {% if show_type == 0 %} class=" nav-link active" {% else %} class="nav-link" {% endif %} role="tab"
+                id="banner-top-image" href="{{ url_for('workbench.index') }}">轮播栏</a>
+        </li>
+        <li {% if show_type == 1 %} aria-current="page" {% endif %} class="nav-item" } class="nav-item">
+            <a {% if show_type == 1 %} class="nav-link active" {% else %} class="nav-link" {% endif %}
+                id="workbench-news" role="tab" href="{{ url_for('workbench.news') }}">实时新闻</a>
+        </li>
+        <li {% if show_type == 2 %} aria-current="page" {% endif %} class="nav-item" } class="nav-item">
+            <a {% if show_type == 2 %} class="nav-link active" {% else %} class="nav-link" {% endif %}
+                id="workbench-news-type" role="tab" href="{{ url_for('workbench.newstype') }}">新闻分类</a>
+        </li>
+    </ul>
+    {% if show_type == 0 %}
+        {% include 'workbench/top_image_list.html' %}
+    {% elif show_type == 1 %}
+        {% include 'workbench/news_list.html' %}
+    {% else %}
+        {% include 'workbench/newstype_list.html' %}
+    {% endif %}
 
-    </div>
+</div>
 {% endblock %}

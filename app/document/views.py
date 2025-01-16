@@ -101,10 +101,10 @@ def doc_result(filename):
     content = convert_word_to_html(filename)
     return ok(message="ok", data=content)
 
-@doc.route('/delete/<int:visual_id>', methods=['POST'])
+@doc.route('/delete/<int:doc_id>', methods=['DELETE'])
 @login_required
-def doc_delete(visual_id):
-    document = Document.query.get(visual_id)
+def doc_delete(doc_id):
+    document = Document.query.get(doc_id)
     if document is None:
         return params_error(message="数据查询失败")
     if document.result_url is not None:
@@ -118,4 +118,4 @@ def doc_delete(visual_id):
         delete_file(water_file_name)
     db.session.delete(document)
     db.session.commit()
-    return redirect(url_for(".index"))
+    return ok(message="ok", data={"redirect": url_for(".index")})

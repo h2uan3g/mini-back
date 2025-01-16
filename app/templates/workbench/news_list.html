@@ -8,26 +8,24 @@
                 <input class="form-control search-input  me-2" type="search" placeholder="查询" aria-label="Search">
                 <button class="btn btn-outline-success d-none" type="submit">Search</button>
             </form>
-
+    
             <div class="text-end">
-                <a title="new" 
-                    href="{{ url_for('workbench.top_image_detail', status='2') }}" 
-                    class="btn btn-sm btn-primary btn-top">
-                    <i class="bi bi-plus me-1"></i>新增</a>
+                <a title="new" href="{{ url_for('workbench.news_edit') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
             </div>
         </div>
 
         {{ h_render_table(
-                        topImages,
+                        news,
                         titles=titles,
                         actions_title='操作',
                         urlize_columns=('text'),
                         table_classes='table-striped text-center',
                         show_actions=True,
-                        view_url=('workbench.top_image_detail', [('top_image_id', ':id'), ('status', '0')]),
-                        edit_url=('workbench.top_image_detail', [('top_image_id', ':id'), ('status', '1')])
-                        ) 
-                    }}
+                        delete_modal=True,
+                        view_url=('workbench.news_view', [('news_id', ':id')]),
+                        edit_url=('workbench.news_edit', [('news_id', ':id')]),
+                        new_url=('workbench.news_edit',)
+                        ) }}
     </div>
 
 </div>
