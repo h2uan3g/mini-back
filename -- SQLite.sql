@@ -14,3 +14,5 @@ delete from documents WHERE id = 1 or id = 2
 
 update documents set title='xx' where id = 10;
 update documents set title='yy' where id = 11;
+
+DROP TABLE alembic_version;
