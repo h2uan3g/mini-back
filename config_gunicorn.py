@@ -14,8 +14,8 @@ timeout = 600
 # 输出日志级别
 loglevel = 'debug'
 # 存放日志路径
-pidfile = "log/gunicorn.pid"
+#pidfile = "log/gunicorn.pid"
 # 存放日志路径
-accesslog = "log/access.log"
+# accesslog = "log/access.log"
 # 存放日志路径
-errorlog = "log/debug.log"
+# errorlog = "log/debug.log"

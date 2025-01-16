@@ -137,6 +137,26 @@ def visual_view(visual_id=None):
 
 
 @visual.route('/result/<filename>')
+@login_required
 def visual_result(filename):
     content = convert_word_to_html(filename)
     return ok(message="ok", data=content)
+
+@visual.route('/delete/<int:visual_id>', methods=['POST'])
+@login_required
+def visual_delete(visual_id):
+    document = Document.query.get(visual_id)
+    if document is None:
+        return params_error(message="数据查询失败")
+    if document.result_url is not None:
+        result_file_name = document.result_url.split("/")[-1]
+        delete_file(result_file_name, "UPLOAD_FOLDER_DOCS")
+    if document.source_url is not None:
+        source_file_name = document.source_url.split("/")[-1]
+        delete_file(source_file_name, "UPLOAD_FOLDER_DOCS")
+    if document.water_url is not None:
+        water_file_name = document.water_url.split("/")[-1]
+        delete_file(water_file_name)
+    db.session.delete(document)
+    db.session.commit()
+    return redirect(url_for(".index"))

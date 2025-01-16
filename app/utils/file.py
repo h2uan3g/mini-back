@@ -27,14 +27,15 @@ def save_file(images, pathname="UPLOAD_FOLDER"):
     return save_file
 
 
-def delete_file(pre_image):
+def delete_file(pre_image, basepath="UPLOAD_FOLDER"):
+    pre_path = current_app.config[basepath]
     if pre_image is not None and len(pre_image) > 0:
         if "," in pre_image:
             pre_images = pre_image.split(",")
             for img in pre_images:
-                os.remove(current_app.config["UPLOAD_FOLDER"] + "/" + img)
+                os.remove(pre_path + "/" + img)
         else:
-            os.remove(current_app.config["UPLOAD_FOLDER"] + "/" + pre_image)
+            os.remove(pre_path + "/" + pre_image)
 
 
 def save_single_file(file, basepath="UPLOAD_FOLDER"):

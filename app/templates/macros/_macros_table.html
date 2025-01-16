@@ -189,7 +189,13 @@
                                                         aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                确定删除「{{ row.name }}」吗？
+                                                {% if row.title %}
+                                                    确定删除「{{ row.title }}」吗？
+                                                {% elif row.name %}
+                                                    确定删除「{{ row.name }}」吗？
+                                                {% else %}
+                                                    确定删除吗？
+                                                {% endif %}
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
