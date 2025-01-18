@@ -10,6 +10,7 @@
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
         <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}"
               type="image/x-icon">
+        <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet"/>
         <link href="{{ url_for('static', filename='css/bootstrap-icons.min.css') }}" rel="stylesheet"/>
         <link href="{{ url_for('static', filename='css/uppy.min.css') }}" rel="stylesheet"/>
         <link href="{{ url_for('static', filename='css/wangeditor.css') }}" rel="stylesheet"/>
@@ -18,111 +19,112 @@
     {% endblock %}
 </head>
 <body>
-{% block navbar %}
-    <header data-bs-theme="dark">
-        <nav class="navbar navbar-expand-md fixed-top header-bg">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                    <i class="bi bi-explicit"></i>
-                </a>
+{% block page %}
+    {% block navbar %}
+        <header data-bs-theme="dark">
+            <nav class="navbar navbar-expand-md fixed-top header-bg">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                        <i class="bi bi-explicit"></i>
+                    </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="collapse navbar-collapse w-100" id="navbarNav">
-                    <ul class="navbar-nav w-100">
-                        <li class="nav-item my-auto">
-                            <a class="nav-link my-auto" href="{{ url_for('main.index') }}">首页</a>
-                        </li>
-                        <li class="nav-item my-auto">
-                            <a class="nav-link" href="{{ url_for('visual.index') }}">数据管理</a>
-                        </li>
-                        <li class="nav-item my-auto">
-                            <a class="nav-link" href="{{ url_for('customer.index') }}">客户</a>
-                        </li>
-                        <li class="nav-item my-auto">
-                            <a class="nav-link" href="{{ url_for('workbench.index') }}">工作台</a>
-                        </li>
-                        <li class="nav-item my-auto">
-                            <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
-                        </li>
-                        <li class="nav-item my-auto me-auto">
-                            <a class="nav-link" href="{{ url_for('doc.index') }}">合同管理</a>
-                        </li>
-
-                        {% if current_user.is_authenticated %}
-                            <li class="nav-item dropdown-center btn-group my-auto">
-                                <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    <img class="rounded-circle me-2"
-                                         style="width: 28px; height: 28px;"
-                                         size="20"
-                                         src="{{ current_user.gravatar() }}"> {{ current_user.username }}
-                                </a>
-                                <ul id="custom-dropdown" class="custom-dropdown-menu dropdown-menu">
-                                     <li><a class="dropdown-item" role="button" type="button"
-                                           href="{{ url_for('auth.profile') }}">个人信息</a>
-                                    </li>
-                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" role="button" type="button"
-                                           href="{{ url_for('auth.logout') }}">退出</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% else %}
+                    <div class="collapse navbar-collapse w-100" id="navbarNav">
+                        <ul class="navbar-nav w-100">
                             <li class="nav-item my-auto">
-                                <a class="nav-link btn btn-outline-secondary py-2 px-4 shadow"
-                                   href="{{ url_for('auth.login') }}">登录</a>
+                                <a class="nav-link my-auto" href="{{ url_for('main.index') }}">首页</a>
                             </li>
-                        {% endif %}
-                    </ul>
+                            <li class="nav-item my-auto">
+                                <a class="nav-link" href="{{ url_for('visual.index') }}">数据管理</a>
+                            </li>
+                            <li class="nav-item my-auto">
+                                <a class="nav-link" href="{{ url_for('customer.index') }}">客户</a>
+                            </li>
+                            <li class="nav-item my-auto">
+                                <a class="nav-link" href="{{ url_for('workbench.index') }}">工作台</a>
+                            </li>
+                            <li class="nav-item my-auto">
+                                <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
+                            </li>
+                            <li class="nav-item my-auto me-auto">
+                                <a class="nav-link" href="{{ url_for('doc.index') }}">合同管理</a>
+                            </li>
+
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item dropdown-center btn-group my-auto">
+                                    <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                        <img class="rounded-circle me-2"
+                                            style="width: 28px; height: 28px;"
+                                            size="20"
+                                            src="{{ current_user.gravatar() }}"> {{ current_user.username }}
+                                    </a>
+                                    <ul id="custom-dropdown" class="custom-dropdown-menu dropdown-menu">
+                                        <li><a class="dropdown-item" role="button" type="button"
+                                            href="{{ url_for('auth.profile') }}">个人信息</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" role="button" type="button"
+                                            href="{{ url_for('auth.logout') }}">退出</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li class="nav-item my-auto">
+                                    <a class="nav-link btn btn-outline-secondary py-2 px-4 shadow"
+                                    href="{{ url_for('auth.login') }}">登录</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    {% endblock %}
+
+    {% block content %}
+        <main class="container">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            <div class="modal fade" id="myModal" tabindex="-1"
+                aria-labelledby="deleteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deleteModalLabel">系统提示</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            默认内容
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                关闭
+                            </button>
+                            <button type="submit"
+                                    name="confirm"
+                                    value="confirm"
+                                    id="confirmButton"
+                                    class="btn btn-outline-primary">确定
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-{% endblock %}
-
-<!-- Your page content -->
-{% block content %}
-    <main class="container">
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-
-        <div class="modal fade" id="myModal" tabindex="-1"
-            aria-labelledby="deleteModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel">系统提示</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        默认内容
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                            关闭
-                        </button>
-                        <button type="submit"
-                                name="confirm"
-                                value="confirm"
-                                id="confirmButton"
-                                class="btn btn-outline-primary">确定
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% block page_content %}{% endblock %}
-    </main>
+            {% block page_content %}{% endblock %}
+        </main>
+    {% endblock %}
 {% endblock %}
 
 {% block scripts %}

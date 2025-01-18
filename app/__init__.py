@@ -8,7 +8,7 @@ from flask_pagedown import PageDown
 from sqlalchemy import MetaData
 from flask_wtf import CSRFProtect
 from flask_cors import CORS
-
+from dotenv import load_dotenv
 from config import config
 
 login_manager = LoginManager()
@@ -50,6 +50,7 @@ def format_images(value):
         return images
 
 def create_app(config_name='default'):
+    load_dotenv()
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)

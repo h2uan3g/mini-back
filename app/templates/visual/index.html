@@ -1,32 +1,207 @@
 {% extends "base.html" %}
 
-
 {% block title %}Flasky{% endblock %}
 
-{% block page_content %}
-
+{% block page %}
+<div id="map-page">
     <div id="charOptProduct" data-char-opt="{{ data1 }}"></div>
     <div id="charOptCustomer" data-char-opt="{{ data2 }}"></div>
+    <div id="charOptNews" data-char-opt="{{ data3 }}"></div>
 
-    <div class="card mt-5">
-        <h5 class="card-header">客户信息</h5>
-        <div class="card-body">
-            <div id="echartCustomer" style="height: 420px;"></div>
+    <!-- 头部模块 -->
+    <div class="header">
+        <ul class="left">
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="title">
+            <span>数据可视化大屏</span>
         </div>
+        <ul class="right">
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
 
-    <div class="card mt-5 mb-5">
-        <h5 class="card-header">成交信息</h5>
-        <div class="card-body">
-            <div id="echartProduct" style="height: 420px;"></div>
+    <div class="content">
+        <div class="left">
+            <div class="card map-cell-bg" id="char-customer">
+                <div class="card-header" id="customer-header" data-bs-toggle="collapse" data-bs-target="#customer-body"
+                    aria-expanded="true" aria-controls="customer-body">
+                    <h6 class="mb-0 d-flex justify-content-between">
+                        近一个月注册用户 <i class="bi bi-arrow-down-up"></i>
+                    </h6>
+                </div>
+                <div id="customer-body" class="card-body collapse show" aria-labelledby="customer-header">
+                    <div class="map-target" id="echartCustomer""></div>
+                </div>
+            </div>
+            <div class=" card map-cell-bg" id="char-news">
+                <div class="card-header" id="news-header" data-bs-toggle="collapse" data-bs-target="#news-body"
+                    aria-expanded="true" aria-controls="news-body">
+                    <h6 class="mb-0 d-flex justify-content-between">
+                        近一个月注册用户 <i class="bi bi-arrow-down-up"></i>
+                    </h6>
+                </div>
+                <div id="news-body" class="card-body collapse show" aria-labelledby="news-header">
+                    <div class="map-target" id="echartNews"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle">
+            <div id="map-container"></div>
+        </div>
+
+        <div class="right">
+            <div class="card map-cell-bg" id="char-product">
+                <div class="card-header" id="product-header" data-bs-toggle="collapse" data-bs-target="#product-body"
+                    aria-expanded="true" aria-controls="product-body">
+                    <h6 class="mb-0 d-flex justify-content-between">
+                        近一个月销售Top6 <i class="bi bi-arrow-down-up"></i>
+                    </h6>
+                </div>
+                <div id="product-body" class="card-body collapse show" aria-labelledby="product-header">
+                    <div class="map-target" id="echartProduct"></div>
+                </div>
+            </div>
+
+            <div class="card map-cell-bg" id="char-carousel">
+                <div class="card-header" id="carousel-header" data-bs-toggle="collapse" data-bs-target="#carousel-body"
+                    aria-expanded="true" aria-controls="carousel-body">
+                    <h6 class="mb-0 d-flex justify-content-between">
+                        新闻列表 <i class="bi bi-arrow-down-up"></i>
+                    </h6>
+                </div>
+                <div id="carousel-body" class="card-body collapse show" aria-labelledby="carousel-header">
+                    <div class="map-target scroll-carousel">
+                        <div class="list-group list-group-flush border-bottom scrollarea">
+                            <a href="#" class="list-group-item list-group-item-action active py-3 lh-sm"
+                                aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small>Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Tues</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Mon</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Tues</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Mon</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Tues</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Mon</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Tues</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">List group item heading</strong>
+                                    <small class="text-body-secondary">Mon</small>
+                                </div>
+                                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below
+                                    the
+                                    heading and date.</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
+</div>
+</div>
 
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='/js/echar/echarts.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='/js/index.js') }}"></script>
+{{ super() }}
+<script src="{{ url_for('static', filename='/js/echar/echarts.min.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='/js/l7.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='/js/index.js') }}"></script>
 {% endblock %}
