@@ -1,11 +1,13 @@
 import hashlib
 from datetime import datetime
 from flask import current_app, request, url_for
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
-from app import db
-from app import login_manager
+from app import login_manager, db
+from .base import BaseModel
+
 
 
 @login_manager.user_loader
@@ -21,9 +23,9 @@ class Permission:
     ADMIN = 16
 
 
-class Role(db.Model):
+class Role(BaseModel):
     __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
     permissions = db.Column(db.Integer)
@@ -83,7 +85,7 @@ class Follow(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, BaseModel):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
@@ -105,6 +107,7 @@ class User(UserMixin, db.Model):
                                 backref=db.backref('followed', lazy='joined'),
                                 lazy='dynamic',
                                 cascade='all, delete-orphan')
+   
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -184,7 +187,7 @@ class User(UserMixin, db.Model):
         return '<User %r>' % self.username
 
     def ping(self):
-        self.last_seen = datetime.utcnow()
+        self.last_seen = datetime.now()
         db.session.add(self)
         db.session.commit()
 

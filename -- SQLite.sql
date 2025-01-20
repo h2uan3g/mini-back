@@ -1,6 +1,8 @@
 -- SQLite
 .tables
 
+SELECT name FROM sqlite_master WHERE type='table';
+
 SELECT * from roles;
 SELECT * from users;
 SELECT * from documents;
@@ -19,3 +21,4 @@ update documents set title='xx' where id = 10;
 update documents set title='yy' where id = 11;
 
 DROP TABLE alembic_version;
+ 

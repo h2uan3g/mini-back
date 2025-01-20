@@ -4,7 +4,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Regexp
-from ..models import User
+
+from ..models import User, Role
 
 
 class LoginForm(FlaskForm):

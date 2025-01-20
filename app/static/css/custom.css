@@ -224,6 +224,15 @@ body {
   height: 100vh;
   background-color: #0A1020;
 }
+#map-page .header-container {
+  position: relative;
+}
+#map-page .header-container .btn-back-home {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+}
 #map-page .header {
   width: 100%;
   height: 5rem;

@@ -5,7 +5,7 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-    <div class="card px-3 py-4 mt-5">
+    <div class="card px-3 py-5 mt-5">
         <div class="w-100">
             {{ h_render_table(
                 users,
@@ -14,7 +14,7 @@
                 urlize_columns=('text'),
                 table_classes='table-striped text-center',
                 show_actions=True,
-                view_url=('customer.view', [('user_id', ':id')]),
+                view_url=('auth.customer_view', [('user_id', ':id')]),
                 page=pagination.page,
                 per_page=pagination.per_page) }}
         </div>

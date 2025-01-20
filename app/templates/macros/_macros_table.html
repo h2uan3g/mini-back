@@ -61,7 +61,7 @@
         <thead {% if header_classes %} class="{{ header_classes }}"{% endif %}>
             <tr>
                 {% for title in titles %}
-                    {% if title[0] == 'index' %}
+                    {% if title[0] == 'row_number' %}
                         <th scope="col" class="align-middle" style="width:3rem">
                             {{ title[1] }}
                         </th>
@@ -79,7 +79,6 @@
         </thead>
         <tbody{% if body_classes %} class="{{ body_classes }}"{% endif %}>
         {% for row in data %}
-            {% set outer_index = loop.index %}
             <tr>
                 {% for title in titles %}
                     {% set key = title[0] %}
@@ -87,7 +86,7 @@
                     {%- if key == primary_key -%}
                         <th scope="row" class="align-middle">
                     {%- else -%}
-                        <td class="align-middle" {% if key =='index' %} style="width:3rem" {% endif %} >
+                        <td class="align-middle" {% if key =='row_number' %} style="width:3rem" {% endif %} >
                     {%- endif -%}
                     {%- if value is string -%}
                         {%- if safe_columns and key in safe_columns -%}
@@ -104,9 +103,9 @@
                     {%- elif value.__class__.__base__.__name__ == 'Enum' -%}
                         {{ value.value }}
                     {%- else -%}
-                        {% if key =='index' %}
-                            {{ outer_index + (page-1) * per_page }}
-                        {% elif key =='updateTime' %}
+                        {% if key =='updateTime' %}
+                            {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
+                        {% elif key =='last_seen' %}
                             {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
                         {% else %}
                             {{ value }}

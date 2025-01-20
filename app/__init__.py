@@ -76,9 +76,6 @@ def create_app(config_name='default'):
     from .visual import visual as visual_blueprint
     app.register_blueprint(visual_blueprint, url_prefix='/visual')
 
-    from .customer import customer as customer_blueprint
-    app.register_blueprint(customer_blueprint, url_prefix='/customer')
-
     from .workbench import workbench as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/workbench')
 

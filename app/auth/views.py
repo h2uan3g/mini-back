@@ -112,7 +112,8 @@ def profile():
         db.session.commit()
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.username))
-    form.name.data = current_user.name
+    form.name.data = current_user.username
+    form.email.data = current_user.email
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     form.avatar.data = current_user.gravatar()
@@ -187,3 +188,32 @@ def followed_by(username):
     return render_template('followers.html', user=user, title="Followed by",
                            endpoint='.followed_by', pagination=pagination,
                            follows=follows)
+
+
+@auth.route('/customer')
+@login_required
+def customer():
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.paginate(
+        page=page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
+        error_out=False)
+    users = pagination.items
+    titles = [('row_number', '序号'), ('username', '昵称'), ('avatar_hash', '头像'), ('last_seen', '最近登录时间')]
+    return render_template('customer/customer.html',
+                           titles=titles,
+                           users=users,
+                           pagination=pagination)
+
+
+@auth.route('/customer/<int:user_id>/view')
+@login_required
+def customer_view(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    form = RegistrationForm()
+    if user is None:
+        return render_template('404.html')
+    form.username.data = user.username
+    form.email.data = user.email
+    return render_template('customer/customer_edit.html',
+                           is_view=0,
+                           form=form)

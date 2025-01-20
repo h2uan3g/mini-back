@@ -1,24 +1,40 @@
 {% extends "base.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
 
 {% block page_content %}
 
-    <div class="card mt-5 px-3 py-3">
+<div class="card mt-5 px-3 py-3 mx-auto">
 
-        {{ render_form(form) }}
+    <div form id="customerForm" method="POST">
+        {{ form.csrf_token }}
+        <div class="d-flex">
+            <div style="width: 6rem;margin: auto 0">{{ form.username.label }}</div>
+            <div class="flex-fill">
+                {{ form.username(class='form-control', disabled=status==0) }}
+            </div>
+        </div>
+
+        <div class="d-flex mt-3">
+            <div style="width: 6rem;margin: auto 0">{{ form.email.label }}:</div>
+            <div class="flex-fill">
+                {{ form.email(class='form-control', disabled=status==0) }}
+            </div>
+        </div>
+
+        <div class="d-flex mt-3">
+            <div style="width: 6rem;margin: auto 0">{{ form.email.label }}:</div>
+            <div class="flex-fill">
+                {{ form.email(class='form-control', disabled=status==0) }}
+            </div>
+        </div>
 
         <div class="mt-4">
-            <button
-                    type="button"
-                    onclick="window.history.back();"
-                    class="btn btn-primary float-end">返回
+            <button type="button" onclick="window.history.back();" class="btn btn-sm btn-primary float-end">返回
             </button>
             {% if is_view != 0 %}
-                <button name="submit" id="submit"
-                        type="submit" class="btn btn-primary ms-3">提交
-                </button>
+            <button name="submit" id="submit" type="submit" class="btn btn-sm btn-primary ms-3">提交
+            </button>
             {% endif %}
         </div>
-    </div>
+</div>
 
 {% endblock %}

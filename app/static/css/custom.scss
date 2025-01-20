@@ -260,6 +260,17 @@ body {
   height: 100vh;
   background-color: $map-bg;
 
+  .header-container {
+    position: relative;
+
+    .btn-back-home {
+      position: absolute;
+      top: 50%;
+      right: 2rem;
+      transform: translateY(-50%);
+    }
+  }
+
   .header {
     width: 100%;
     height: 5rem;
