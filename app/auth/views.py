@@ -65,7 +65,10 @@ def login():
     form = LoginForm()
     form.remember_me.data = True
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        if '@' in form.email.data:
+            user = User.query.filter_by(email=form.email.data).first()
+        else:
+            user = User.query.filter_by(username=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
@@ -92,34 +95,39 @@ def register():
         user = User(email=form.email.data,
                     username=form.username.data,
                     password=form.password.data,
+                    about_me=form.about_me.data,
+                    location=form.location.data,
                     confirmed=True)
         db.session.add(user)
         db.session.commit()
-        flash('注册成功!')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
-@auth.route('/profile')
+@auth.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     form = EditProfileForm()
     if form.validate_on_submit():
-        current_user.name = form.name.data
+        current_user.username = form.username.data
+        current_user.email = form.email.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
         db.session.add(current_user._get_current_object())
         db.session.commit()
-        flash('Your profile has been updated.')
-        return redirect(url_for('.user', username=current_user.username))
-    form.name.data = current_user.username
+        flash('修改成功.')
+        return redirect(url_for('main.index'))
+    form.username.data = current_user.username
     form.email.data = current_user.email
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     form.avatar.data = current_user.gravatar()
+    status = 0
+    if current_user.is_administrator():
+        status = 1
     return render_template('auth/profile.html',
                            form=form,
-                           status=0)
+                           status=status)
 
 
 @auth.route('/follow/<username>')
@@ -209,11 +217,55 @@ def customer():
 @login_required
 def customer_view(user_id):
     user = User.query.filter_by(id=user_id).first()
-    form = RegistrationForm()
+    form = EditProfileForm()
     if user is None:
         return render_template('404.html')
+    if form.validate_on_submit():
+        if 'cancle' in request.form:
+            # 取消
+            return redirect(url_for('.customer'))
     form.username.data = user.username
     form.email.data = user.email
+    form.location.data = user.location
+    form.about_me.data = user.about_me
+    form.avatar.data = user.gravatar()
+    status = 0
+    if user.id == current_user.id:
+        status = 1
     return render_template('customer/customer_edit.html',
-                           is_view=0,
-                           form=form)
+                           status=status,
+                           form=form,
+                           user=user)
+
+                        
+@auth.route('/customer/<int:user_id>/view', methods=['GET', 'POST'])
+@login_required
+def customer_edit(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    form = EditProfileForm()
+    if user is None:
+        return render_template('404.html')
+    if form.validate_on_submit():
+        if 'cancle' in request.form:
+            # 取消
+            return redirect(url_for('.customer'))
+        elif 'submit' in request.form:
+            user.username = form.username.data
+            user.email = form.email.data
+            user.location = form.location.data
+            user.about_me = form.about_me.data
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('.customer'))
+    form.username.data = user.username
+    form.email.data = user.email
+    form.location.data = user.location
+    form.about_me.data = user.about_me
+    form.avatar.data = user.gravatar()
+    status = 0
+    if user.id == current_user.id:
+        status = 1
+    return render_template('customer/customer_edit.html',
+                           status=status,
+                           form=form,
+                           user=user)

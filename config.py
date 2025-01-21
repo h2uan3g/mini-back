@@ -19,6 +19,8 @@ class Config:
     UPLOAD_FOLDER_DOCS = os.path.join(basedir, 'app/static/docs')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     PERMANENT_SESSION_LIFETIME = timedelta(hours=6)
+    # 配置登录过期时间为 1 天（1天 * 24小时 * 60分钟 * 60秒）
+    REMEMBER_COOKIE_DURATION = 1 * 24 * 60 * 60
 
     @staticmethod
     def init_app(app):

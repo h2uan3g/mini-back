@@ -22,9 +22,14 @@ if os.environ.get('FLASK_COVERAGE'):
 
 
 @app.cli.command('deploy')
-def deploy():
+@click.option("--name", default="admin", help="设置超级管理员用户")
+def deploy(name):
     upgrade()
     Role.insert_roles()
+    user = User.query.filter_by(username=name).first()
+    if user is not None:
+        user.role = Role.query.filter_by(name='Administrator').first()
+        db.session.commit()
 
 
 @app.cli.command()

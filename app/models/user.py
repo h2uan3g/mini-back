@@ -1,13 +1,11 @@
 import hashlib
 from datetime import datetime
-from flask import current_app, request, url_for
-from sqlalchemy import func
+from flask import current_app, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from app import login_manager, db
 from .base import BaseModel
-
 
 
 @login_manager.user_loader
@@ -82,7 +80,7 @@ class Follow(db.Model):
                             primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                             primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.now)
 
 
 class User(UserMixin, BaseModel):

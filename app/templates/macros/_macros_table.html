@@ -23,6 +23,7 @@
 {%- endmacro %}
 
 {% macro h_render_table(data,
+                      table_name=None,
                       titles=None,
                       primary_key='id',
                       primary_key_title='#',
@@ -43,9 +44,11 @@
                       delete_url=None,
                       delete_modal=True,
                       new_url=None,
+                      auto_edit_url=None,
                       action_pk_placeholder=':id',
                       page=0,
-                      per_page=0) %}
+                      per_page=0,
+                      current_user=None) %}
     {% if not titles %}
         {% set titles = get_table_titles(data, primary_key, primary_key_title) %}
     {% endif %}
@@ -145,7 +148,7 @@
                                     </li>
                                     
                                 {% endif %}
-                                {% if edit_url -%}
+                                {% if edit_url %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item btn btn-sm action-icon text-decoration-none"
@@ -157,6 +160,14 @@
                                             title="{{ config['BOOTSTRAP_TABLE_EDIT_TITLE'] }}">{{ render_icon('pencil-fill') }}编辑</a>
                                     </li>
                                 {%- endif %}
+                                {% if auto_edit_url and current_user.id == row.id %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item btn btn-sm action-icon text-decoration-none"
+                                            href="{{ build_url(row, auto_edit_url[0], auto_edit_url[1], model, primary_key) | trim }}"
+                                            title="{{ config['BOOTSTRAP_TABLE_EDIT_TITLE'] }}">{{ render_icon('pencil-fill') }}编辑</a>
+                                    </li>
+                                {% endif %}
                                 {% if delete_url %}
                                     <li><hr class="dropdown-divider"></li>
                                     {% if delete_modal %}

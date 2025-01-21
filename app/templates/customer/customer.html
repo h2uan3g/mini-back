@@ -15,8 +15,10 @@
                 table_classes='table-striped text-center',
                 show_actions=True,
                 view_url=('auth.customer_view', [('user_id', ':id')]),
+                auto_edit_url=('auth.customer_edit', [('user_id', ':id')]),
                 page=pagination.page,
-                per_page=pagination.per_page) }}
+                per_page=pagination.per_page,
+                current_user=current_user) }}
         </div>
 
         <div class="mt-2 mb-4 ms-auto me-2">

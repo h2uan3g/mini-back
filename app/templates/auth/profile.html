@@ -5,6 +5,7 @@
     <div class="card mx-auto w-50 mt-5 px-3 py-3">
         <form method="POST"
               enctype="multipart/form-data" id="productForm">
+            {{ form.hidden_tag() }}
             <div class="d-flex">
                 <div class="my-auto" style="width: 6rem">{{ form.avatar.label }}</div>
                 <div class="flex-fill">
@@ -13,8 +14,8 @@
             </div>
 
             <div class="d-flex mt-3">
-                <div class="my-auto" style="width: 6rem">{{ form.name.label }}</div>
-                <div class="flex-fill">{{ form.name(class='form-control', disabled=status==0) }}</div>
+                <div class="my-auto" style="width: 6rem">{{ form.username.label }}</div>
+                <div class="flex-fill">{{ form.username(class='form-control', disabled=status==0) }}</div>
             </div>
 
             <div class="d-flex mt-3">
@@ -36,11 +37,11 @@
                 <button
                         type="button"
                         onclick="window.history.back();"
-                        class="btn btn-sm btn-primary">返回
+                        class="btn btn-sm btn-bottom btn-primary">返回
                 </button>
                 {% if status != 0 %}
                     <button name="submit" id="submit"
-                            type="submit" class="btn btn-sm btn-outline-primary ms-3">提交
+                            type="submit" class="btn btn-sm btn-bottom btn-outline-primary ms-3">提交
                     </button>
                 {% endif %}
             </div>

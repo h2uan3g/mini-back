@@ -4,7 +4,7 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-    <div style="width: 30vw;" class="card border border-1 rounded shadow px-3 py-5  mt-5 mx-auto">
+    <div style="width: 30vw;" class="card px-3 py-5  mt-5 mx-auto">
         <h3>登录</h3>
         <form method="POST" enctype="multipart/form-data">
             {{ form.csrf_token }}
@@ -20,8 +20,8 @@
 
             <div class="row mt-3">
                 <div class="col-3 my-auto">{{ form.code.label }}</div>
-                <div class="col-5 my-auto">{{ form.code(class='form-control') }}</div>
-                <div class="col-4">
+                <div class="col-6 my-auto">{{ form.code(class='form-control') }}</div>
+                <div class="col-3">
                     <img class='img-rounded'
                          style="width: 7em; height: 3em;"
                          src="{{ url_for('auth.get_image') }}"

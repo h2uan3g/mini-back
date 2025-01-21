@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
+{% from 'macros/_macros_form.html' import render_form %}
 
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-    <div style="width: 30vw;" class="border border-1 rounded shadow px-3 py-5  mt-5 mx-auto">
-        <h3 id="register-back"><i class="bi bi-arrow-left me-2"></i>注册</h3>
-        {{ render_form(form) }}
+    <div style="width: 30vw;" class="card px-3 py-5  mt-5 mx-auto">
+        <h3 id="register-back" class="mb-4"><i class="bi bi-arrow-left me-2"></i>注册</h3>
+        {{ render_form(form, form_type="horizontal") }}
     </div>
 {% endblock %}
+

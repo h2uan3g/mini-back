@@ -1,40 +1,54 @@
 {% extends "base.html" %}
+{% from 'macros/_macros_form.html' import render_form %}
 
 {% block page_content %}
+<div class="card w-75 mt-5 px-4 py-5 mx-auto">
+     <form method="POST" enctype="multipart/form-data" id="productForm">
+          {{ form.hidden_tag() }}
+          <div class="d-flex">
+               <div class="my-auto" style="width: 6rem">{{ form.avatar.label }}</div>
+               <div class="flex-fill">
+                    <div class="position-relative d-inline-block">
+                         <img src="{{ form.avatar.data }}" class="rounded-circle border border-1 border-opacity-50" alt=""
+                              style="height: 100px; width:100px;">
+                         {% if user.is_administrator() %}
+                              <span class="position-absolute top-0 start-50 translate-middle badge text-bg-secondary">超级管理员</span>
+                         {% endif %}
+                    </div>
+               </div>
+          </div>
 
-<div class="card mt-5 px-3 py-3 mx-auto">
+          <div class="d-flex mt-3">
+               <div class="my-auto" style="width: 6rem">{{ form.username.label }}</div>
+               <div class="flex-fill">{{ form.username(class='form-control', disabled=status==0) }}</div>
+          </div>
 
-    <div form id="customerForm" method="POST">
-        {{ form.csrf_token }}
-        <div class="d-flex">
-            <div style="width: 6rem;margin: auto 0">{{ form.username.label }}</div>
-            <div class="flex-fill">
-                {{ form.username(class='form-control', disabled=status==0) }}
-            </div>
-        </div>
+          <div class="d-flex mt-3">
+               <div class="my-auto" style="width: 6rem">{{ form.email.label }}</div>
+               <div class="flex-fill">{{ form.email(class='form-control', disabled=status==0) }}</div>
+          </div>
 
-        <div class="d-flex mt-3">
-            <div style="width: 6rem;margin: auto 0">{{ form.email.label }}:</div>
-            <div class="flex-fill">
-                {{ form.email(class='form-control', disabled=status==0) }}
-            </div>
-        </div>
+          <div class="d-flex mt-3">
+               <div class="my-auto" style="width: 6rem">{{ form.location.label }}</div>
+               <div class="flex-fill">{{ form.location(class='form-control', disabled=status==0) }}</div>
+          </div>
 
-        <div class="d-flex mt-3">
-            <div style="width: 6rem;margin: auto 0">{{ form.email.label }}:</div>
-            <div class="flex-fill">
-                {{ form.email(class='form-control', disabled=status==0) }}
-            </div>
-        </div>
+          <div class="d-flex mt-3">
+               <div style="width: 6rem">{{ form.about_me.label }}</div>
+               <div class="flex-fill">{{ form.about_me(class='form-control', disabled=status==0) }}</div>
+          </div>
 
-        <div class="mt-4">
-            <button type="button" onclick="window.history.back();" class="btn btn-sm btn-primary float-end">返回
-            </button>
-            {% if is_view != 0 %}
-            <button name="submit" id="submit" type="submit" class="btn btn-sm btn-primary ms-3">提交
-            </button>
-            {% endif %}
-        </div>
+          <div class="mt-4 float-end btn-group">
+               <button type="cancle" name="{{ form.cancle.name }}" class="btn btn-sm btn-bottom btn-primary">
+                    {{ form.cancle.label.text }}
+                </button>
+               {% if status != 0 %}
+               <button type="submit" name="{{ form.submit.name }}" class="btn btn-sm btn-bottom btn-outline-primary">
+                    {{ form.submit.label.text }}
+                </button>
+               {% endif %}
+          </div>
+     </form>
 </div>
 
 {% endblock %}
