@@ -10,7 +10,7 @@
             </form>
     
             <div class="text-end">
-                <a title="new" href="{{ url_for('workbench.news_edit') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
+                <a title="new" href="{{ url_for('workbench.news_detail', status='2') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
             </div>
         </div>
 
@@ -22,9 +22,9 @@
                         table_classes='table-striped text-center',
                         show_actions=True,
                         delete_modal=True,
-                        view_url=('workbench.news_view', [('news_id', ':id')]),
-                        edit_url=('workbench.news_edit', [('news_id', ':id')]),
-                        new_url=('workbench.news_edit',)
+                        view_url=('workbench.news_detail', [('news_id', ':id'), ('status', '0')]),
+                        edit_url=('workbench.news_detail', [('news_id', ':id'), ('status', '1')]),
+                        delete_url=('workbench.news_delete', [('news_id', ':id')]),
                         ) }}
     </div>
 

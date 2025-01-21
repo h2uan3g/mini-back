@@ -39,7 +39,7 @@
           </div>
 
           <div class="mt-4 float-end btn-group">
-               <button type="cancle" name="{{ form.cancle.name }}" class="btn btn-sm btn-bottom btn-primary">
+               <button type="button" class="btn btn-sm btn-bottom btn-primary" onclick="window.history.back();">
                     {{ form.cancle.label.text }}
                 </button>
                {% if status != 0 %}

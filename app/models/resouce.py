@@ -1,7 +1,9 @@
 from datetime import datetime
 from flask import url_for
 from app import db
-from sqlalchemy import func, select 
+from sqlalchemy import func, select
+
+from app.models.base import BaseModel 
 
 
 class TopImage(db.Model):
@@ -51,10 +53,10 @@ class News(db.Model):
         return json_news
 
 
-class NewsType(db.Model):
+class NewsType(BaseModel):
     __tablename__ = 'news_types'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64), unique=True)
     news = db.relationship('News', backref='news_type', lazy='dynamic')
 
     def to_json(self):

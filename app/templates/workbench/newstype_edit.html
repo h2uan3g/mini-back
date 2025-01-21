@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block page_content %}
+    <div class="card w-75 mt-5 px-4 py-5 mx-auto" id="news-valuable">
+        <form method="POST" id="newsTypeForm">
+            {{ form.csrf_token }}
+            <div class="row">
+                <div class="col-1 my-auto">{{ form.name.label }}</div>
+                <div class="col-11">{{ form.name(class='form-control', disabled=status==0) }}</div>
+            </div>
+
+            <div class="mt-4 float-end btn-group">
+                <button type="button" class="btn btn-sm btn-bottom btn-primary" onclick="window.history.back();">
+                     {{ form.cancle.label.text }}
+                 </button>
+                {% if status != 0 %}
+                <button type="submit" name="{{ form.submit.name }}" class="btn btn-sm btn-bottom btn-outline-primary">
+                     {{ form.submit.label.text }}
+                 </button>
+                {% endif %}
+           </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+ 
+{% endblock %}

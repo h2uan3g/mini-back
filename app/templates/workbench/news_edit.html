@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form %}
 
-{% block content %}
-    <div class="card p-5 m-5 w-75 mx-auto" id="news-valuable">
+{% block page_content %}
+    <div class="card w-75 mt-5 px-4 py-5 mx-auto" id="news-valuable">
         <form method="POST" id="newsForm" enctype="multipart/form-data">
             <div id="newsInfo"
                  data-news-info="{{ newsInfo }}"></div>
             <div id="newsInfoIsView"
                  data-status="{{ status }}"></div>
             {{ form.csrf_token }}
-            <div class="row">
-                <div class="col-1 my-auto">{{ form.type.label }}</div>
-                <div class="col-11">{{ form.type(class='form-control', disabled=status!=2) }}</div>
+            <div class="d-flex">
+                <div class="my-auto" style="width: 6rem">{{ form.type.label }}</div>
+                <div class="flex-fill">{{ form.type(class='form-control', disabled=status!=2) }}</div>
             </div>
-            <div class="row mt-3">
-                <div class="col-1 my-auto">{{ form.title.label }}</div>
-                <div class="col-11">{{ form.title(class='form-control', disabled=status==0) }}</div>
+            <div class="d-flex mt-3">
+                <div class="my-auto" style="width: 6rem">{{ form.title.label }}</div>
+                <div class="flex-fill">{{ form.title(class='form-control', disabled=status==0) }}</div>
             </div>
-            <div class="row mt-3">
-                <div class="col-1 my-auto">{{ form.auth.label }}</div>
-                <div class="col-11">{{ form.auth(class='form-control', disabled=status==0) }}</div>
+            <div class="d-flex mt-3">
+                <div class="my-auto" style="width: 6rem">{{ form.auth.label }}</div>
+                <div class="flex-fill">{{ form.auth(class='form-control', disabled=status==0) }}</div>
             </div>
-            <div class="row mt-3">
-                <div class="col-1">{{ form.image.label }}</div>
-                <div class="col-11">
+            <div class="d-flex mt-3">
+                <div style="width: 6rem">{{ form.image.label }}</div>
+                <div class="flex-fill">
                     <div id="news-image-area"></div>
                 </div>
             </div>
 
-            <div class="row mt-3 mb-3">
-                <div class="col-1">{{ form.body.label }}</div>
-                <div class="col-11">
+            <div class="d-flex mt-3">
+                <div style="width: 6rem">{{ form.body.label }}</div>
+                <div class="flex-fill">
                     <div id="editor—wrapper" class="border border-dark-subtle">
                         <div id="toolbar-container"><!-- 工具栏 --></div>
                         <div id="editor-container" style="min-height: 550px;"><!-- 编辑器 --></div>
@@ -38,15 +38,15 @@
                 </div>
             </div>
 
-            <div class="mt-5 float-end">
+            <div class="mt-4 float-end">
                 <button
                         type="button"
                         onclick="window.history.back();"
-                        class="btn btn-primary">返回
+                        class="btn btn-bottom btn-primary">返回
                 </button>
                 {% if status != 0 %}
                     <button name="submit" id="submit"
-                            type="submit" class="btn btn-outline-primary ms-3">提交
+                            type="submit" class="btn btn-bottom btn-outline-primary ms-3">提交
                     </button>
                 {% endif %}
             </div>
