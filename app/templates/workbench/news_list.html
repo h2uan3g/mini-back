@@ -3,29 +3,55 @@
 <div class="card px-4 py-3">
     <div class="w-100">
         <div class="d-flex justify-content-between mb-3">
-            <form class="d-flex form-search" role="search" id="search-form-classify">
+            <form class="d-flex form-search" role="search" id="search-form-news">
                 <i class="bi bi-search search-icon"></i>
                 <input class="form-control search-input  me-2" type="search" placeholder="查询" aria-label="Search">
                 <button class="btn btn-outline-success d-none" type="submit">Search</button>
             </form>
     
             <div class="text-end">
-                <a title="new" href="{{ url_for('workbench.news_detail', status='2') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
+                <a title="new" href="{{ url_for('workbench.news_detail') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
             </div>
         </div>
 
         {{ h_render_table(
-                        news,
+                        data,
                         titles=titles,
                         actions_title='操作',
                         urlize_columns=('text'),
                         table_classes='table-striped text-center',
                         show_actions=True,
                         delete_modal=True,
-                        view_url=('workbench.news_detail', [('news_id', ':id'), ('status', '0')]),
+                        view_url=('workbench.news_detail', [('news_id', ':id')]),
                         edit_url=('workbench.news_detail', [('news_id', ':id'), ('status', '1')]),
                         delete_url=('workbench.news_delete', [('news_id', ':id')]),
                         ) }}
     </div>
-
 </div>
+
+<script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
+<script> 
+function deleteModel(el) {
+      let title = el.dataset.title
+      let name = el.dataset.name
+      let data = name || title || ''
+      let id = el.dataset.id
+      let url = el.dataset.url
+      showModal(`确定要删除「${data}」吗？`, function () {
+         $.ajax({
+            url: `${url}`,
+            type: 'DELETE',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+               if (response.data && response.data.redirect) {
+                  window.location.href = response.data.redirect;
+               }
+            },
+            error: function (xhr, status, error) {
+               showModal(`提交失败!!! ${error}`)
+            }
+         });
+      })
+   }
+</script>

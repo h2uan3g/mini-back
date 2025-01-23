@@ -10,13 +10,12 @@ from flask import (
     current_app,
     flash,
     redirect,
-    jsonify,
 )
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 
 from app.models.resouce import NewsType
-from app.utils.file import delete_file
+from app.utils.file import delete_file, save_file
 
 from . import workbench
 from .forms import NewsTypeForm, TopImageForm, NewsForm
@@ -30,10 +29,10 @@ from ..utils import save_single_file, params_error, ok
 def index():
     topImages = TopImage.query.all()
     form = TopImageForm()
-    titles = [("index", "序号"), ("title", "标题"), ("image", "图片")]
+    titles = [("row_number", "序号"), ("title", "标题"), ("image", "图片")]
     items_list = [
         {
-            "index": image.row_number,
+            "row_number": image.row_number,
             "id": image.id,
             "image": (
                 url_for("static", filename=f"images/{image.image}", _external=True)
@@ -57,28 +56,26 @@ def index():
 @workbench.route("/detail", methods=["GET", "POST"])
 @login_required
 def top_image_detail(top_image_id=None):
-    status = request.args.get("status", "0")
-    if status == "2":
+    status = 0
+    if top_image_id == None:
         topImage = TopImage()
+        status = 2
     else:
-        if top_image_id is None:
-            flash("数据查询失败")
-            return redirect(url_for(".index"))
         topImage = TopImage.query.get(top_image_id)
         if topImage is None:
             flash("数据查询失败")
             return redirect(url_for(".index"))
-
+        if request.args.get("status", "0") == "1":
+            status = 1
     form = TopImageForm()
     if form.validate_on_submit():
-        image = form.image.data
-        title = form.title.data
-        save_file = save_single_file(image)
+        image = form.image.data 
+        image_file = save_file(image, "UPLOAD_FOLDER")
         if status == 1:
             pre_image = topImage.image
             delete_file(pre_image)
-        topImage.image = save_file
-        topImage.title = title
+        topImage.image = image_file
+        topImage.title = form.title.data
         db.session.add(topImage)
         db.session.commit()
         return ok(data={"redirect": url_for(".index")})
@@ -94,114 +91,97 @@ def top_image_detail(top_image_id=None):
     )
 
 
+@workbench.route("/<int:top_image_id>/delete", methods=["DELETE"])
+@login_required
+def top_image_delete(top_image_id):
+    top_image = TopImage.query.get(top_image_id)
+    if top_image is None:
+        return params_error(message="数据查询失败")
+    delete_file(top_image.image)
+    db.session.delete(top_image)
+    db.session.commit()
+    return ok(data={"redirect": url_for(".index")})
+
+
 @workbench.route("/news", methods=["GET"])
 @login_required
 def news():
     news = News.query.all()
     form = NewsForm()
-    titles = [
-        ("id", "序号"),
-        ("type", "类型"),
-        ("title", "标题"),
-        ("auth", "作者"),
-        ("updateTime", "修改时间"),
-    ]
+    titles = [("row_number", "序号"), ("type", "类型"), ("title", "标题"), ("auth", "作者"), ("updated_at", "修改时间")]
     news_list = [
         {
+            "row_number": heal.row_number,
             "id": heal.id,
             "image": (
                 url_for("static", filename=f"images/{heal.coverImage}", _external=True)
                 if heal.coverImage
                 else ""
             ),
-            "type": heal.type,
+            "type": NewsType.query.get(heal.newstype_id).name if NewsType.query.get(heal.newstype_id) else "",
             "auth": heal.auth,
-            "isAd": 0,
-            "updateTime": heal.updateTime,
+            "updated_at": heal.updated_at,
             "title": heal.title,
         }
         for heal in news
     ]
     return render_template(
-        "workbench/index.html", form=form, titles=titles, new=news_list, show_type=1
+        "workbench/index.html", form=form, titles=titles, data=news_list, show_type=1
     )
 
 
-@workbench.route("/<int:News_id>/News_view")
-@login_required
-def news_view(news_id):
-    News = News.query.get(news_id)
-    form = NewsForm()
-    if News is None:
-        flash("数据查询失败")
-        return redirect(url_for(".index"))
-    form.type.data = News.type
-    form.title.data = News.title
-    form.auth.data = News.auth
-    form.body.data = News.body
-    form.image.data = News.coverImage
-    return render_template(
-        "workbench/w_edit_News.html",
-        NewsInfo=json.dumps(News.to_json()),
-        status=0,
-        form=form,
-    )
-
-
-@workbench.route("/<int:news_id>/news_detail", methods=["GET", "POST"])
-@workbench.route("/news_detail", methods=["GET", "POST"])
+@workbench.route("/news/<int:news_id>/detail", methods=["GET", "POST"])
+@workbench.route("/news/detail", methods=["GET", "POST"])
 @login_required
 def news_detail(news_id=None):
-    status = request.args.get("status", "0")
+    status = 0
     if news_id is None:
         news = News()
+        status = 2
     else:
         news = News.query.get(news_id)
         if news is None:
             flash("数据查询失败")
             return redirect(url_for(".index"))
+        if request.args.get("status", "0") == "1":
+            status = 1
     form = NewsForm()
     if form.validate_on_submit():
         image = form.image.data
-        # 一个类型只有一项
-        type = form.type.data
-        if image:
-            NewsPre = News.query.filter_by(type=type).first()
-            if NewsPre:
-                pre_image = NewsPre.coverImage
-                if pre_image is not None and len(pre_image) > 0:
-                    os.remove(current_app.config["UPLOAD_FOLDER"] + "/" + pre_image)
-            else:
-                NewsPre = News()
-            save_file = save_single_file(image)
-            NewsPre.type = type
-            NewsPre.coverImage = save_file
-            NewsPre.auth = form.auth.data
-            NewsPre.title = form.title.data
-            NewsPre.updateTime = datetime.now()
-            NewsPre.body = form.body.data
-            db.session.add(NewsPre)
-            db.session.commit()
-            return jsonify({"redirect": url_for(".News")})
+        image_file = save_file(image, "UPLOAD_FOLDER")
+        if status == 1:
+            pre_image = news.coverImage
+            delete_file(pre_image)
+        news.coverImage = image_file
+        news.newstype_id = form.type.data
+        news.auth = form.auth.data
+        news.title = form.title.data
+        news.updated_at = datetime.now()
+        news.body = form.body.data
+        db.session.add(news)
+        db.session.commit()
+        return ok(data={"redirect": url_for(".news")})
     elif form.errors:
         return params_error(message=f"{form.errors}")
-    form.type.data = news.type
+    form.type.data = news.newstype_id
     form.title.data = news.title
     form.auth.data = news.auth
     form.body.data = news.body
     form.image.data = news.coverImage
     return render_template(
         "workbench/news_edit.html",
-        status=int(status),
+        status=status,
         form=form,
+        newsInfo = json.dumps(news.to_json())
     )
 
 
-@workbench.route("/<int:news_id>/delete", methods=["DELETE"])
+@workbench.route("/news/<int:news_id>/delete", methods=["DELETE"])
 def news_delete(news_id):
     news = News.query.get(news_id)
     if news is None:
         return params_error(message="数据查询失败")
+    delete_file(news.coverImage)
     db.session.delete(news)
     db.session.commit()
     return ok(data={"redirect": url_for(".news")})

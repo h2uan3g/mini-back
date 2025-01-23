@@ -95,12 +95,9 @@ $(document).ready(async () => {
             })
 
             $('#documentForm').on('submit', function (event) {
-                event.preventDefault(); // 阻止表单的默认提交行为
-
-                // 获取表单数据
-                let formData = new FormData(this); // 序列化表单数据
-                // formData.append('type', topImage.type)
-
+                event.preventDefault();  
+            
+                let formData = new FormData(this); 
                 const files1 = uppySource.getFiles();
                 if (files1 == undefined || files1.length == 0) {
                     alert('未选源文件!!!');
@@ -110,7 +107,6 @@ $(document).ready(async () => {
                     // 这里可以绑定 pre_image
                     formData.append('source', file.data, file.name);
                 });
-
                 const files2 = uppyWater.getFiles();
                 if (files2 == undefined || files2.length == 0) {
                     alert('未选中水印图片!!!');
@@ -122,7 +118,7 @@ $(document).ready(async () => {
 
                 let url = ""
                 if (documentEl && documentEl.id) {
-                    url = `/doc/${documentEl.id}/detail`
+                    url = `/doc/${documentEl.id}/detail?status=1`
                 } else {
                     url = `/doc/detail`
                 }

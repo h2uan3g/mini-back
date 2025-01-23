@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form %}
 
-{% block content %}
-    <div class="card p-5 m-5">
+{% block page_content %}
+    <div class="card w-75 mt-5 px-4 py-4 mx-auto">
         <form method="POST"
               enctype="multipart/form-data" id="documentForm">
             <div id="documentFormInfo" data-document="{{ document }}"></div>

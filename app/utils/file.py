@@ -33,9 +33,13 @@ def delete_file(pre_image, basepath="UPLOAD_FOLDER"):
         if "," in pre_image:
             pre_images = pre_image.split(",")
             for img in pre_images:
-                os.remove(pre_path + "/" + img)
+                file_del = pre_path + "/" + img
+                if os.path.exists(file_del):
+                    os.remove(file_del)
         else:
-            os.remove(pre_path + "/" + pre_image)
+            file_del = pre_path + "/" + pre_image
+            if os.path.exists(file_del):
+                os.remove(file_del)
 
 
 def save_single_file(file, basepath="UPLOAD_FOLDER"):
@@ -50,12 +54,16 @@ def save_single_file(file, basepath="UPLOAD_FOLDER"):
 def validate_file(form, field):
     if not field.data:
         raise ValidationError("文件为空.")
-
-    for data in field.data:
-        # 获取文件的 MIME 类型
+    
+    if isinstance(field.data, (list, tuple)) and len(field.data) > 0:
+        for data in field.data:
+            mime_type = data.content_type
+            allowed_mime_types = ["image/jpeg", "image/jpg", "image/png", "image/gif"]
+            if mime_type not in allowed_mime_types:
+                raise ValidationError("仅支持格式JPEG、PNG、GIF")
+    else:
+        data = field.data
         mime_type = data.content_type
-
-        # 检查是否是允许的 MIME 类型
         allowed_mime_types = ["image/jpeg", "image/jpg", "image/png", "image/gif"]
         if mime_type not in allowed_mime_types:
             raise ValidationError("仅支持格式JPEG、PNG、GIF")

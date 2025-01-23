@@ -3,7 +3,7 @@
 <div class="card px-4 py-3">
     <div class="w-100">
         <div class="d-flex justify-content-between mb-3">
-            <form class="d-flex form-search" role="search" id="search-form-classify">
+            <form class="d-flex form-search" role="search" id="search-form-top-image">
                 <i class="bi bi-search search-icon"></i>
                 <input class="form-control search-input  me-2" type="search" placeholder="查询" aria-label="Search">
                 <button class="btn btn-outline-success d-none" type="submit">Search</button>
@@ -11,7 +11,7 @@
 
             <div class="text-end">
                 <a title="new" 
-                    href="{{ url_for('workbench.top_image_detail', status='2') }}" 
+                    href="{{ url_for('workbench.top_image_detail') }}" 
                     class="btn btn-sm btn-primary btn-top">
                     <i class="bi bi-plus me-1"></i>新增</a>
             </div>
@@ -24,10 +24,52 @@
                         urlize_columns=('text'),
                         table_classes='table-striped text-center',
                         show_actions=True,
-                        view_url=('workbench.top_image_detail', [('top_image_id', ':id'), ('status', '0')]),
-                        edit_url=('workbench.top_image_detail', [('top_image_id', ':id'), ('status', '1')])
+                        view_url=('workbench.top_image_detail', [('top_image_id', ':id')]),
+                        edit_url=('workbench.top_image_detail', [('top_image_id', ':id'), ('status', '1')]),
+                        delete_url=('workbench.top_image_delete', [('top_image_id', ':id')])
                         ) 
                     }}
     </div>
-
 </div>
+
+<script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
+<script>
+    $('#search-form-top-image input').on('input', function (e) {
+        let search = $(this).val()
+        $.ajax({
+            url: `/product/classify/search?search=${search}`,
+            type: 'GET',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $("#table-container-classify").html(response)
+            },
+            error: function (xhr, status, error) {
+                console.log("error", error)
+            }
+        });
+    })
+    function deleteModel(el) {
+      let title = el.dataset.title
+      let name = el.dataset.name
+      let data = name || title || ''
+      let id = el.dataset.id
+      let url = el.dataset.url
+      showModal(`确定要删除「${data}」吗？`, function () {
+         $.ajax({
+            url: `${url}`,
+            type: 'DELETE',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+               if (response.data && response.data.redirect) {
+                  window.location.href = response.data.redirect;
+               }
+            },
+            error: function (xhr, status, error) {
+               showModal(`提交失败!!! ${error}`)
+            }
+         });
+      })
+   }
+</script>

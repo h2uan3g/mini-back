@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import declared_attr
 from .. import db
@@ -10,9 +11,6 @@ class BaseModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
-    # row_number = db.column_property(
-    #     func.row_number().over(order_by=created_at)
-    # )
 
     @declared_attr
     def row_number(cls):

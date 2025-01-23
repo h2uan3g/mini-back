@@ -41,38 +41,32 @@ $(document).ready(function () {
             const blob = await response.blob();
             const pathlist = url.split('/')
             uppyTopImage.addFile({
-                name: pathlist[pathlist.length - 1], // 自定义文件名
-                type: blob.type,          // 动态获取文件类型
-                data: blob,               // 文件数据
+                name: pathlist[pathlist.length - 1], 
+                type: blob.type,         
+                data: blob,          
                 source: 'remote',
                 preview: url,
                 isRemote: true,
             });
-
-
         };
         addNetworkImage(topImage.image)
     }
 
     $('#topImageForm').on('submit', function (event) {
-        event.preventDefault(); // 阻止表单的默认提交行为
-
-        // 获取表单数据
-        let formData = new FormData(this); // 序列化表单数据
-        formData.append('type', topImage.type)
-        // let files = $('#input-id')[0].files;
+        event.preventDefault();
+        let formData = new FormData(this);
         const files = uppyTopImage.getFiles();
         if (files == undefined || files.length == 0) {
             alert('未选中图片!!!');
             return;
         }
         $.each(files, function (i, file) {
-            formData.append('image', file.data);
+            formData.append('image', file.data, file.name);
         });
 
-        let url = `/workbench/detail?status=2`
+        let url = `/workbench/detail`
         if (topImage.id != undefined) {
-            url = `/workbench/${topImage.id}/edit`
+            url = `/workbench/${topImage.id}/detail?status=1`
         }
 
         $.ajax({

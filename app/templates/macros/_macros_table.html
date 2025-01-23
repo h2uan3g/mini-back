@@ -106,7 +106,7 @@
                     {%- elif value.__class__.__base__.__name__ == 'Enum' -%}
                         {{ value.value }}
                     {%- else -%}
-                        {% if key =='updateTime' %}
+                        {% if key =='updated_at' %}
                             {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}
                         {% elif key =='last_seen' %}
                             {{ value|format_datetime('%Y-%m-%d %H:%M:%S') }}

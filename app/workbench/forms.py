@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from flask_wtf.form import _Auto
+from wtforms import MultipleFileField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField, StringField, TextAreaField
 from wtforms.validators import DataRequired
-
 from app.models.resouce import NewsType
+from app.utils.file import validate_file
 
 
 class TopImageForm(FlaskForm):
@@ -14,16 +14,11 @@ class TopImageForm(FlaskForm):
         validators=[DataRequired()],
         default=0,
     )
-
-    image = FileField(
+    image = MultipleFileField(
         "照片：",
-        validators=[
-            FileAllowed(["jpeg", "jpg", "png", "gif"], "只能上传图片"),
-            DataRequired(),
-        ],
+        validators=[validate_file],
         render_kw={
-            "style": "border: 1px solid; \
-                                      border-color:silver; padding:4px;border-radius:4px;"
+            "style": "border: 1px solid; border-color:silver; padding:4px;border-radius:4px;"
         },
     )
 
@@ -41,12 +36,9 @@ class NewsForm(FlaskForm):
     auth = StringField(
         "作者：", validators=[DataRequired()], render_kw={"placeholder": "输入作者名称"}
     )
-    image = FileField(
+    image = MultipleFileField(
         "封面：",
-        validators=[
-            FileAllowed(["jpeg", "jpg", "png", "gif"], "只能上传图片"),
-            DataRequired(),
-        ],
+        validators=[validate_file],
         render_kw={
             "style": "border: 1px solid; \
                                           border-color:silver; padding:4px;border-radius:4px;"
