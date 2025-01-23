@@ -34,21 +34,7 @@
 
 <script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
 <script>
-    $('#search-form-top-image input').on('input', function (e) {
-        let search = $(this).val()
-        $.ajax({
-            url: `/product/classify/search?search=${search}`,
-            type: 'GET',
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                $("#table-container-classify").html(response)
-            },
-            error: function (xhr, status, error) {
-                console.log("error", error)
-            }
-        });
-    })
+    
     function deleteModel(el) {
       let title = el.dataset.title
       let name = el.dataset.name

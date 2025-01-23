@@ -39,7 +39,7 @@ class ProductForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        if kwargs.get('type') == 0:
+        if kwargs.get('type') == "0":
             self.classify.choices = [(cla.id, cla.name)
                                      for cla in
                                      Classify.query.filter(Classify.name == '积分商城').order_by(Classify.name).all()]

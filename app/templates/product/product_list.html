@@ -12,7 +12,7 @@
             </form>
     
             <div class="text-end">
-                <a title="new" href="{{ url_for('product.product_edit', type=1) }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
+                <a title="new" href="{{ url_for('product.product_detail', type=1) }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
             </div>
         </div>
 
@@ -25,9 +25,9 @@
                 table_classes='table-striped text-center',
                 show_actions=True,
                 delete_modal=True,
-                delete_url=('product.product_delete', [('product_id', ':id')]),
-                view_url=('product.product_view', [('product_id', ':id'), ('type', '1')]),
-                edit_url=('product.product_edit', [('product_id', ':id'), ('type', '1')]),
+                view_url=('product.product_detail', [('product_id', ':id'), ('type', '1')]),
+                edit_url=('product.product_detail', [('product_id', ':id'), ('status', '1'), ('type', '1')]),
+                delete_url=('product.product_delete', [('product_id', ':id'), ('type', '1')]),
                 page=pagination.page,
                 per_page=pagination.per_page) }}
 
@@ -39,45 +39,3 @@
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
-<script>
-   function deleteModel(el) {
-      let title = el.dataset.title
-      let name = el.dataset.name
-      let data = name || title || ''
-      let id = el.dataset.id
-      let url = el.dataset.url
-      showModal(`确定要删除「${data}」吗？`, function () {
-         $.ajax({
-            url: `${url}`,
-            type: 'DELETE',
-            contentType: false,
-            processData: false,
-            success: function (response) {
-               if (response.data && response.data.redirect) {
-                  window.location.href = response.data.redirect;
-               }
-            },
-            error: function (xhr, status, error) {
-               showModal(`提交失败!!! ${error}`)
-            }
-         });
-      })
-   }
-
-   $('#search-form-product input').on('input', function (e) {
-        let search = $(this).val()
-        $.ajax({
-            url: `/product/search?search=${search}`,
-            type: 'GET',
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                $("#table-container-product").html(response)
-            },
-            error: function (xhr, status, error) {
-                console.log("error", error)
-            }
-        });
-    })
-</script>

@@ -1,14 +1,13 @@
 from flask import url_for
 
 from app import db
+from app.models.base import BaseModel
 
 
-class Product(db.Model):
+class Product(BaseModel):
     __tablename__ = 'products'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(64))
     introduction = db.Column(db.Text)
-    type = db.Column(db.Integer)  # 0 积分商城  1 普通商品
     price = db.Column(db.Numeric(10, 2))
     credits = db.Column(db.Numeric(10, 2))
     discount = db.Column(db.Float)
@@ -29,18 +28,19 @@ class Product(db.Model):
             'introduction': self.introduction,
             'price': self.price,
             'credits': self.credits,
-            'type': self.type,
             'discount': self.discount,
             'image1': url_for('static', filename=f'images/{self.image1}', _external=True) if self.image1 else "",
             'image2': url_for('static', filename=f'images/{self.image2}', _external=True) if self.image2 else "",
             'classify': self.classify_id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
         return json_product
 
 
-class Classify(db.Model):
+class Classify(BaseModel):
     __tablename__ = 'classifys'
-    id = db.Column(db.Integer, primary_key=True)
+
     name = db.Column(db.String(64), unique=True)
     product = db.relationship('Product', backref='classify', lazy='dynamic')
 
@@ -48,5 +48,7 @@ class Classify(db.Model):
         json_product = {
             'id': self.id,
             'name': self.name,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
         return json_product

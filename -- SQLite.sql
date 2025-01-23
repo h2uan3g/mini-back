@@ -9,8 +9,10 @@ SELECT * from documents;
 SELECT * from top_images;
 SELECT * from news;
 SELECT * from news_types;
+SELECT * from products;
+SELECT * from classifys;
 
-update users SET confirmed = 1 WHERE id = 1; 
+update products SET fk_product_classify = 2 WHERE id = 2; 
 
 delete from documents WHERE id = 1 or id = 2  
         or id = 3 or id = 4 or id = 5 or id = 6

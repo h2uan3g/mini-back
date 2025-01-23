@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask import Flask, request, jsonify, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
@@ -38,7 +39,8 @@ def unauthorized():
 
 def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
         if isinstance(value, datetime):
-            return value.strftime(format)
+            local_timezone = ZoneInfo('Asia/Shanghai')
+            return value.replace(tzinfo=ZoneInfo('UTC')).astimezone(local_timezone).strftime(format)
         return value
 
 def format_images(value):

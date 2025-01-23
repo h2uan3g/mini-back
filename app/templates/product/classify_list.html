@@ -11,7 +11,7 @@
             </form>
     
             <div class="text-end">
-                <a title="new" href="{{ url_for('product.classify_edit') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
+                <a title="new" href="{{ url_for('product.classify_detail') }}" class="btn btn-sm btn-primary btn-top"><i class="bi bi-plus me-1"></i>新增</a>
             </div>
         </div>
 
@@ -23,8 +23,8 @@
                 table_classes='text-center table-hover',
                 header_classes='table-light',
                 show_actions=True,
-                view_url=('product.classify_view', [('classify_id', ':id')]),
-                edit_url=('product.classify_edit', [('classify_id', ':id')]),
+                view_url=('product.classify_detail', [('classify_id', ':id')]),
+                edit_url=('product.classify_detail', [('classify_id', ':id'), ('status', '1')]),
                 delete_url=('product.classify_delete', [('classify_id', ':id')]),
                 ) }}
 
@@ -34,22 +34,3 @@
         </div>
     </div>
 </div>
-
-<script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
-<script>
-    $('#search-form-classify input').on('input', function (e) {
-        let search = $(this).val()
-        $.ajax({
-            url: `/product/classify/search?search=${search}`,
-            type: 'GET',
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                $("#table-container-classify").html(response)
-            },
-            error: function (xhr, status, error) {
-                console.log("error", error)
-            }
-        });
-    })
-</script>

@@ -15,6 +15,30 @@ const showModal = (message, onconfirm) => {
     myModal.show();
 }
 
+function deleteModel(el) {
+    let title = el.dataset.title
+    let name = el.dataset.name
+    let data = name || title || ''
+    let id = el.dataset.id
+    let url = el.dataset.url
+    showModal(`确定要删除「${data}」吗？`, function () {
+        $.ajax({
+            url: `${url}`,
+            type: 'DELETE',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.data && response.data.redirect) {
+                    window.location.href = response.data.redirect;
+                }
+            },
+            error: function (xhr, status, error) {
+                showModal(`提交失败!!! ${error}`)
+            }
+        });
+    })
+}
+
 $(document).ready(() => {
 
     $('#register-back').on('click', () => {

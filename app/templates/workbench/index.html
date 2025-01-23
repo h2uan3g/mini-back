@@ -26,3 +26,40 @@
 
 </div>
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $('#search-form-classify input').on('input', function (e) {
+            let search = $(this).val()
+            $.ajax({
+                url: `/product/classify/search?search=${search}`,
+                type: 'GET',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#table-container-classify").html(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log("error", error)
+                }
+            });
+        })
+
+        $('#search-form-top-image input').on('input', function (e) {
+            let search = $(this).val()
+            $.ajax({
+                url: `/product/classify/search?search=${search}`,
+                type: 'GET',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#table-container-classify").html(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log("error", error)
+                }
+            });
+        })
+    </script>
+{% endblock %}

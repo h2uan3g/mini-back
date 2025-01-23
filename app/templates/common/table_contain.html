@@ -8,10 +8,10 @@
     table_classes='text-center table-hover',
     header_classes='table-light',
     show_actions=True,
-    view_url=('product.classify_view', [('classify_id', ':id')]),
-    edit_url=('product.classify_edit', [('classify_id', ':id')]),
-    delete_url=('product.classify_delete', [('classify_id', ':id')]),
-    ) }}
+    view_url=view_url,
+    edit_url=edit_url,
+    delete_url=delete_url,
+    )}}
 
 <div class="mt-3">
     {{ render_pagination(pagination, size='sm', align='right') }}

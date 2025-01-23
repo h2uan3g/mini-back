@@ -88,10 +88,10 @@ $(document).ready(() => {
 
     $('#productForm').on('submit', function (event) {
         event.preventDefault(); // 阻止表单的默认提交行为
-
-        // 获取表单数据
         let formData = new FormData(this); // 序列化表单数据
-        // formData.append('type', topImage.type)
+        if (type == '0') {
+            formData.append('credits', formData.get('price'));
+        }  
 
         const files1 = uppyTop.getFiles();
         if (files1 == undefined || files1.length == 0) {
@@ -99,7 +99,6 @@ $(document).ready(() => {
             return;
         }
         $.each(files1, function (i, file) {
-            // 这里可以绑定 pre_image
             formData.append('image1', file.data, file.name);
         });
 
@@ -114,9 +113,9 @@ $(document).ready(() => {
 
         let url = ""
         if (product.id == null) {
-            url = `/product/edit?type=${type}`
+            url = `/product/detail?type=${type}`
         } else {
-            url = `/product/${product.id}/edit?type=${type}`
+            url = `/product/${product.id}/detail?type=${type}`
         }
         if (type == 0) {
             formData.append('price', 0);

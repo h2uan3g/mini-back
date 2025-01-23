@@ -38,8 +38,39 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        $(document).ready(() => {
-            $('#btnDeleteCredits').on('click', (e) => {
+        $('#search-form-classify input').on('input', function (e) {
+            let search = $(this).val()
+            $.ajax({
+                url: `/product/classify/search?search=${search}`,
+                type: 'GET',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#table-container-classify").html(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log("error", error)
+                }
+            });
+        })
+
+        $('#search-form-product input').on('input', function (e) {
+            let search = $(this).val()
+            $.ajax({
+                url: `/product/search?search=${search}`,
+                type: 'GET',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#table-container-product").html(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log("error", error)
+                }
+            });
+        })
+
+        $('#btnDeleteCredits').on('click', (e) => {
                 e.preventDefault();
                 let productId = $('#btnDeleteCredits').data('product-id');
                 $.ajax({
@@ -60,6 +91,5 @@
                     }
                 });
             })
-        })
     </script>
 {% endblock %}
