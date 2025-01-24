@@ -41,3 +41,8 @@ nosetests.xml
 # Virtual environment
 .venv
 venv
+
+.env
+-- SQLite.sql
+.vscode
+.DS_Store

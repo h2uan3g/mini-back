@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Chat{% endblock %}
+
+{% block page_content %}
+<div class="card mt-5 mx-auto">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-wechat me-1" style="font-size: 1.2rem;vertical-align: middle;"></i>智能客服
+    </div>
+    <div class="card-body" id="chat-box" style="height: 66vh; overflow-y: scroll;">
+        <div class="message mb-2">
+            <div class="d-flex align-items-center justify-content-end">
+                <p class="text-center bg-primary text-white px-3 py-1 rounded-pill mb-0">Hello!</p>
+                <i class="bi bi-person-fill ms-2" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </div>
+        </div>
+        <div class="message mb-2">
+            <div class="d-flex align-items-center justify-content-start">
+                <i class="bi bi-person-fill me-2" style="font-size: 2rem; color: cornflowerblue;"></i>
+                <p class="text-center bg-secondary text-white px-3 py-1 rounded-pill mb-0">Hi there!</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="input-group">
+            <input type="text" class="form-control" id="chat-input" placeholder="输入内容...">
+            <button class="btn btn-primary" id="send-btn">发送</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$('#send-btn').click(function(){
+    let message = $('#chat-input').val();
+    console.log(message);
+    if (message) {
+        $('#chat-box').append(`<div class="message mb-2">
+            <div class="d-flex align-items-center justify-content-end">
+                <p class="text-center bg-primary text-white px-3 py-1 rounded-pill mb-0">${message}</p>
+                <i class="bi bi-person-fill ms-2" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </div>
+        </div>`);
+    }
+   
+})
+</script>
+{% endblock %}

@@ -50,8 +50,11 @@
                             <li class="nav-item my-auto">
                                 <a class="nav-link" href="{{ url_for('product.index') }}">产品展示</a>
                             </li>
-                            <li class="nav-item my-auto me-auto">
+                            <li class="nav-item my-auto">
                                 <a class="nav-link" href="{{ url_for('doc.index') }}">合同管理</a>
+                            </li>
+                            <li class="nav-item my-auto me-auto">
+                                <a class="nav-link" href="{{ url_for('chat.index') }}">智能客服</a>
                             </li>
 
                             {% if current_user.is_authenticated %}
