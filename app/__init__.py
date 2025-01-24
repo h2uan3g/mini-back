@@ -39,12 +39,13 @@ def unauthorized():
 
 def format_datetime(value, format="%Y-%m-%d %H:%M:%S"):
     if isinstance(value, datetime):
-        local_timezone = ZoneInfo("Asia/Shanghai")
-        return (
-            value.replace(tzinfo=ZoneInfo("UTC"))
-            .astimezone(local_timezone)
-            .strftime(format)
-        )
+        # local_timezone = ZoneInfo("Asia/Shanghai")
+        # return (
+        #     value.replace(tzinfo=ZoneInfo("UTC"))
+        #     .astimezone(local_timezone)
+        #     .strftime(format)
+        # )
+        return value.strftime(format)
     return value
 
 

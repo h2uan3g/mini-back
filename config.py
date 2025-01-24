@@ -15,6 +15,7 @@ class Config:
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
     WEIXIN_APPID = os.environ.get('WEIXIN_APPID') or ''
     WEIXIN_SECRET = os.environ.get('WEIXIN_SECRET') or ''
+    DEEPSEEK_APIKEY = os.environ.get('DEEPSEEK_APIKEY') or ''
     UPLOAD_FOLDER = os.path.join(basedir, './app/static/images')
     UPLOAD_FOLDER_DOCS = os.path.join(basedir, 'app/static/docs')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024

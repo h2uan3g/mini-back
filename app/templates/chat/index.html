@@ -8,18 +8,6 @@
         <i class="bi bi-wechat me-1" style="font-size: 1.2rem;vertical-align: middle;"></i>智能客服
     </div>
     <div class="card-body" id="chat-box" style="height: 66vh; overflow-y: scroll;">
-        <div class="message mb-2">
-            <div class="d-flex align-items-center justify-content-end">
-                <p class="text-center bg-primary text-white px-3 py-1 rounded-pill mb-0">Hello!</p>
-                <i class="bi bi-person-fill ms-2" style="font-size: 2rem; color: cornflowerblue;"></i>
-            </div>
-        </div>
-        <div class="message mb-2">
-            <div class="d-flex align-items-center justify-content-start">
-                <i class="bi bi-person-fill me-2" style="font-size: 2rem; color: cornflowerblue;"></i>
-                <p class="text-center bg-secondary text-white px-3 py-1 rounded-pill mb-0">Hi there!</p>
-            </div>
-        </div>
     </div>
     <div class="card-footer">
         <div class="input-group">
@@ -32,19 +20,52 @@
 
 {% block scripts %}
 {{ super() }}
+<script src={{ url_for('static', filename='js/marked.min.js') }}></script>
 <script>
-$('#send-btn').click(function(){
-    let message = $('#chat-input').val();
-    console.log(message);
-    if (message) {
+    $('#send-btn').click(function () {
+        let message = $('#chat-input').val();
+        console.log(message);
+        if (!message) {
+            show_toast('请输入内容');
+            return;
+        }
         $('#chat-box').append(`<div class="message mb-2">
-            <div class="d-flex align-items-center justify-content-end">
-                <p class="text-center bg-primary text-white px-3 py-1 rounded-pill mb-0">${message}</p>
-                <i class="bi bi-person-fill ms-2" style="font-size: 2rem; color: cornflowerblue;"></i>
-            </div>
-        </div>`);
-    }
-   
-})
+                <div class="d-flex align-items-start justify-content-end chat-box-message">
+                    <p class="text-start bg-primary text-white px-3 py-1 rounded-3 mb-0 chat-box-message-content">${message}</p>
+                    <i class="bi bi-person-fill ms-2" style="font-size: 2rem; color: cornflowerblue;"></i>
+                </div>
+            </div>`);
+        $('#send-btn').prop('disabled', true);
+        $('#chat-input').prop('disabled', true);
+        $('#chat-input').val('加载中...');
+        const data = {
+            message: message
+        };
+        $.ajax({
+            url: '/chat/chat', 
+            type: 'POST',
+            contentType: 'application/json',  
+            data: JSON.stringify(data),  
+            success: function (response) {
+                if (response.code == 0) {
+                    const htmlContent = marked.parse(response.data);
+                    $('#chat-box').append(`<div class="message mb-2">
+                        <div class="d-flex align-items-start justify-content-start chat-box-message">
+                            <i class="bi bi-person-fill me-2" style="font-size: 2rem; color: cornflowerblue;"></i>
+                            <div class="text-start bg-secondary text-white px-3 py-1 rounded-3 mb-0 chat-box-message-content">
+                                ${htmlContent}
+                            </div>
+                        </div>
+                    </div>`);
+                    $('#send-btn').prop('disabled', false);
+                    $('#chat-input').prop('disabled', false);
+                    $('#chat-input').val('');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    })
 </script>
 {% endblock %}

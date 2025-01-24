@@ -30,15 +30,15 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        $('#search-form-classify input').on('input', function (e) {
+        $('#search-form-top-image input').on('input', function (e) {
             let search = $(this).val()
             $.ajax({
-                url: `/product/classify/search?search=${search}`,
+                url: `/workbench/search?search=${search}`,
                 type: 'GET',
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    $("#table-container-classify").html(response)
+                    $("#table-container-top-image").html(response)
                 },
                 error: function (xhr, status, error) {
                     console.log("error", error)
@@ -46,20 +46,37 @@
             });
         })
 
-        $('#search-form-top-image input').on('input', function (e) {
+        $('#search-form-news input').on('input', function (e) {
             let search = $(this).val()
             $.ajax({
-                url: `/product/classify/search?search=${search}`,
+                url: `/workbench/news/search?search=${search}`,
                 type: 'GET',
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    $("#table-container-classify").html(response)
+                    $("#table-container-news").html(response)
                 },
                 error: function (xhr, status, error) {
                     console.log("error", error)
                 }
             });
         })
+
+        $('#search-form-newstype input').on('input', function (e) {
+            let search = $(this).val()
+            $.ajax({
+                url: `/workbench/newstype/search?search=${search}`,
+                type: 'GET',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#table-container-newstype").html(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log("error", error)
+                }
+            });
+        })
+    
     </script>
 {% endblock %}

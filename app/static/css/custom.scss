@@ -6,6 +6,7 @@ $map-bg: #0A1020;
 :root {
   --bs-primary: $primary;
   --bs-primary-rgb: 47, 81, 233;
+  --bs-secondary-rgb: 184, 199, 211
 }
 
 body {
@@ -176,6 +177,19 @@ body {
   }
 }
 
+
+/********** 
+  * 
+  *  chat
+  *    
+ ***********/
+.chat-box-message {
+  .chat-box-message-content {
+    max-width: 80%;
+    margin-top: 0.6rem;
+  }
+ 
+}
 
 
 /********** 

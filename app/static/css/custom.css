@@ -2,6 +2,7 @@
 :root {
   --bs-primary: $primary;
   --bs-primary-rgb: 47, 81, 233;
+  --bs-secondary-rgb: 184, 199, 211 ;
 }
 
 body {
@@ -151,6 +152,16 @@ body {
 #preview-contain canvas {
   display: block;
   border: 1px solid #ddd;
+}
+
+/********** 
+  * 
+  *  chat
+  *    
+ ***********/
+.chat-box-message .chat-box-message-content {
+  max-width: 80%;
+  margin-top: 0.6rem;
 }
 
 /********** 

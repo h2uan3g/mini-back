@@ -28,7 +28,6 @@ from ..utils import save_single_file, params_error, ok
 @login_required
 def index():
     topImages = TopImage.query.all()
-    form = TopImageForm()
     titles = [("row_number", "序号"), ("title", "标题"), ("image", "图片")]
     items_list = [
         {
@@ -45,9 +44,44 @@ def index():
     ]
     return render_template(
         "workbench/index.html",
-        form=form,
         titles=titles,
-        topImages=items_list,
+        data=items_list,
+        show_type=0
+    )
+
+
+@workbench.route("/search", methods=["GET"])
+@login_required
+def index_search():
+    search = request.args.get("search")
+    query = TopImage.query
+    if search:
+        query = query.filter(TopImage.title.like(f"%{search}%"))
+    topImages = query.all()
+    titles = [("row_number", "序号"), ("title", "标题"), ("image", "图片")]
+    items_list = [
+        {
+            "row_number": image.row_number,
+            "id": image.id,
+            "image": (
+                url_for("static", filename=f"images/{image.image}", _external=True)
+                if image
+                else ""
+            ),
+            "title": image.title,
+        }
+        for image in topImages
+    ]
+    view_url = ("workbench.top_image_detail", [("top_image_id", ":id")])
+    edit_url = ("workbench.top_image_detail", [("top_image_id", ":id"), ("status", "1")])
+    delete_url = ("workbench.top_image_delete", [("top_image_id", ":id")])
+    return render_template(
+        "common/table_contain.html",
+        data=items_list,
+        titles=titles,
+        view_url=view_url,
+        edit_url=edit_url,
+        delete_url=delete_url,
         show_type=0,
     )
 
@@ -69,7 +103,7 @@ def top_image_detail(top_image_id=None):
             status = 1
     form = TopImageForm()
     if form.validate_on_submit():
-        image = form.image.data 
+        image = form.image.data
         image_file = save_file(image, "UPLOAD_FOLDER")
         if status == 1:
             pre_image = topImage.image
@@ -106,9 +140,16 @@ def top_image_delete(top_image_id):
 @workbench.route("/news", methods=["GET"])
 @login_required
 def news():
-    news = News.query.all()
-    form = NewsForm()
-    titles = [("row_number", "序号"), ("type", "类型"), ("title", "标题"), ("auth", "作者"), ("updated_at", "修改时间")]
+    page = request.args.get("page", 1, type=int)
+    pagination = News.query.paginate(page=page, per_page=10)
+    titles = [
+        ("row_number", "序号"),
+        ("type", "类型"),
+        ("title", "标题"),
+        ("auth", "作者"),
+        ("updated_at", "修改时间"),
+    ]
+    news = pagination.items
     news_list = [
         {
             "row_number": heal.row_number,
@@ -118,7 +159,11 @@ def news():
                 if heal.coverImage
                 else ""
             ),
-            "type": NewsType.query.get(heal.newstype_id).name if NewsType.query.get(heal.newstype_id) else "",
+            "type": (
+                NewsType.query.get(heal.newstype_id).name
+                if NewsType.query.get(heal.newstype_id)
+                else ""
+            ),
             "auth": heal.auth,
             "updated_at": heal.updated_at,
             "title": heal.title,
@@ -126,7 +171,65 @@ def news():
         for heal in news
     ]
     return render_template(
-        "workbench/index.html", form=form, titles=titles, data=news_list, show_type=1
+        "workbench/index.html",
+        pagination=pagination,
+        titles=titles,
+        data=news_list,
+        show_type=1,
+    )
+
+
+@workbench.route("/news/search")
+@login_required
+def news_search():
+    search = request.args.get("search")
+    page = request.args.get("page", 1, type=int)
+    query = News.query
+    if search:
+        query = query.filter(
+            News.title.like(f"%{search}%") | News.body.like(f"%{search}%")
+        )
+    pagination = query.paginate(page=page, per_page=10)
+    titles = [
+        ("row_number", "序号"),
+        ("type", "类型"),
+        ("title", "标题"),
+        ("auth", "作者"),
+        ("updated_at", "修改时间"),
+    ]
+    news = pagination.items
+    news_list = [
+        {
+            "row_number": heal.row_number,
+            "id": heal.id,
+            "image": (
+                url_for("static", filename=f"images/{heal.coverImage}", _external=True)
+                if heal.coverImage
+                else ""
+            ),
+            "type": (
+                NewsType.query.get(heal.newstype_id).name
+                if NewsType.query.get(heal.newstype_id)
+                else ""
+            ),
+            "auth": heal.auth,
+            "updated_at": heal.updated_at,
+            "title": heal.title,
+        }
+        for heal in news
+    ]
+    view_url = ("workbench.news_detail", [("news_id", ":id")])
+    edit_url = ("workbench.news_detail", [("news_id", ":id"), ("status", "1")])
+    delete_url = ("workbench.news_delete", [("news_id", ":id")])
+    return render_template(
+        "common/table_contain.html",
+        pagination=pagination,
+        titles=titles,
+        show_type=1,
+        view_url=view_url,
+        edit_url=edit_url,
+        delete_url=delete_url,
+        data=news_list,
     )
 
 
@@ -172,7 +275,7 @@ def news_detail(news_id=None):
         "workbench/news_edit.html",
         status=status,
         form=form,
-        newsInfo = json.dumps(news.to_json())
+        newsInfo=json.dumps(news.to_json()),
     )
 
 
@@ -190,16 +293,33 @@ def news_delete(news_id):
 @workbench.route("/newstype", methods=["GET"])
 @login_required
 def newstype():
-    page = request.args.get("page", 1, type=int)
-    pagination = NewsType.query.paginate(
-        page=page,
-        per_page=current_app.config["FLASKY_COMMENTS_PER_PAGE"],
-        error_out=False,
-    )
-    news_types = pagination.items
+    news_types = NewsType.query.all()
     titles = [("row_number", "序号"), ("name", "新闻分类")]
     return render_template(
         "workbench/index.html", show_type=2, titles=titles, data=news_types
+    )
+
+
+@workbench.route("/newstype/search", methods=["GET"])
+@login_required
+def newstype_search():
+    search = request.args.get("search")
+    query = NewsType.query
+    if search:
+        query = query.filter(NewsType.name.like(f"%{search}%"))
+    news_types = query.all()
+    titles = [("row_number", "序号"), ("name", "新闻分类")]
+    view_url = ("workbench.newstype_detail", [("newstype_id", ":id")])
+    edit_url = ("workbench.newstype_detail", [("newstype_id", ":id"), ("status", "1")])
+    delete_url = ("workbench.newstype_delete", [("newstype_id", ":id")])
+    return render_template(
+        "common/table_contain.html",
+        data=news_types,
+        titles=titles,
+        view_url=view_url,
+        edit_url=edit_url,
+        delete_url=delete_url,
+        show_type=0,
     )
 
 

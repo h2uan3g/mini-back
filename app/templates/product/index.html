@@ -70,26 +70,5 @@
             });
         })
 
-        $('#btnDeleteCredits').on('click', (e) => {
-                e.preventDefault();
-                let productId = $('#btnDeleteCredits').data('product-id');
-                $.ajax({
-                    url: `/product/${productId}/credits_delete`,
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        // 请求成功后的回调
-                        if (response.redirect) {
-                            window.location.href = response.redirect; // 前端手动跳转
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // 请求失败后的回调
-                        console.error('Submission failed:', error);
-                        //alert('Submission failed!');
-                    }
-                });
-            })
     </script>
 {% endblock %}

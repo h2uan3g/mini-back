@@ -96,3 +96,5 @@ http {
 #### 设置超级管理员
 - 1. 变量设置邮件 (注册前设置)
 - 2. 在 flasky.py 中执行 `flask deploy --name=admin`
+
+

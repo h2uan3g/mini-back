@@ -1,6 +1,7 @@
+{% from 'bootstrap5/pagination.html' import render_pagination %}
 {% from 'macros/_macros_table.html' import h_render_table %}
 
-<div class="card px-4 py-3">
+<div class="card px-3 py-4">
     <div class="w-100">
         <div class="d-flex justify-content-between mb-3">
             <form class="d-flex form-search" role="search" id="search-form-news">
@@ -14,17 +15,23 @@
             </div>
         </div>
 
-        {{ h_render_table(
-                        data,
-                        titles=titles,
-                        actions_title='操作',
-                        urlize_columns=('text'),
-                        table_classes='table-striped text-center',
-                        show_actions=True,
-                        delete_modal=True,
-                        view_url=('workbench.news_detail', [('news_id', ':id')]),
-                        edit_url=('workbench.news_detail', [('news_id', ':id'), ('status', '1')]),
-                        delete_url=('workbench.news_delete', [('news_id', ':id')]),
-                        ) }}
+        <div id="table-container-news">
+            {{ h_render_table(
+                            data,
+                            titles=titles,
+                            actions_title='操作',
+                            urlize_columns=('text'),
+                            table_classes='table-striped text-center',
+                            show_actions=True,
+                            delete_modal=True,
+                            view_url=('workbench.news_detail', [('news_id', ':id')]),
+                            edit_url=('workbench.news_detail', [('news_id', ':id'), ('status', '1')]),
+                            delete_url=('workbench.news_delete', [('news_id', ':id')]),
+                            ) }}
+
+            <div class="mt-4">
+                {{ render_pagination(pagination, size='sm', align='right') }}
+            </div>
+        </div>
     </div>
 </div>
