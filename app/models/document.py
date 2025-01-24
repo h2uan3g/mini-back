@@ -21,8 +21,6 @@ class Document(BaseModel):
             'source_url': self.source_url,
             'water_url': self.water_url,
             'result_url': self.result_url,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'status': self.status,
         }
         return json_document

@@ -24,25 +24,39 @@ def index():
     page = request.args.get("page", 1, type=int)
     pagination = Document.query.paginate(page=page, per_page=10)
     titles = [("row_number", "序号"), ("title", "标题"), ("updated_at", "更新时间")]
-    docs_orgin = pagination.items
-    docs = [
-        {
-            "row_number": doc.row_number,
-            "id": doc.id,
-            "title": doc.title,
-            "updated_at": doc.updated_at,
-        }
-        for doc in docs_orgin
-    ]
+    docs = pagination.items
     return render_template(
-        "document/index.html", pagination=pagination, titles=titles, docs=docs
+        "document/index.html", pagination=pagination, titles=titles, data=docs
+    )
+
+
+@doc.route("/search")
+@login_required
+def index_search():
+    search = request.args.get('search')
+    page = request.args.get("page", 1, type=int)
+    query = Document.query
+    if search:
+        query = query.filter(Document.title.like(f'%{search}%'))
+    pagination = query.paginate(page=page, per_page=10)
+    titles = [("row_number", "序号"), ("title", "标题"), ("updated_at", "更新时间")]
+    docs = pagination.items
+    view_url = ('doc.doc_detail', [('doc_id', ':id')])
+    delete_url=('doc.doc_delete', [('doc_id', ':id')])
+    return render_template(
+        'common/table_contain.html',
+        pagination=pagination, 
+        titles=titles, 
+        data=docs,
+        view_url=view_url,
+        delete_url=delete_url,
     )
 
 
 @doc.route("/<int:doc_id>/detail", methods=["GET", "POST"])
 @doc.route("/detail", methods=["GET", "POST"])
 @login_required
-def doc_view(doc_id=None):
+def doc_detail(doc_id=None):
     status = 0
     if doc_id is None:
         document = Document()
@@ -69,8 +83,6 @@ def doc_view(doc_id=None):
         else:
             return params_error(message="请上传文件")
         document.title = form.title.data
-        document.create_time = datetime.now()
-        document.update_time = datetime.now()
         document.source_url = url_for(
             "static", filename=f"docs/{source_file}", _external=True
         )
