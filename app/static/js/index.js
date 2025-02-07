@@ -1,3 +1,50 @@
+
+
+function setCusmer(data) {
+    let xData = data.map(it => `${it.year}-${it.month}`)  
+    let yData = data.map(it => it.count)  
+    let echartCustomer = echarts.init(document.getElementById('echartCustomer'));
+    echartCustomer.setOption({
+        tooltip: {
+            trigger: 'item', 
+            axisPointer: {    
+                type: 'shadow'  
+                
+            }
+        },
+        xAxis: {
+            type: 'category',
+            axisLine: {
+                lineStyle: {
+                    color: '#FFFFFF'  
+                }
+            },
+            data: xData
+        },
+        yAxis: {
+            show: true,
+            type: 'value',
+            axisLabel: {
+                color: '#FFFFFF'  
+            },
+        },
+        series: [
+            {
+                type: 'line',
+                data: yData,
+                smooth: true
+            }
+        ],
+        grid: {
+            top: '8%',
+            bottom: '10%',  
+            left: '8%',  
+            right: '8%'  
+        }
+    });
+}
+
+
 function getColor(v) {
     const colors = ['#ffffe5', '#f7fcb9', '#d9f0a3', '#addd8e', '#78c679', '#41ab5d', '#238443', '#005a32'];
     return v > 50
@@ -17,14 +64,17 @@ function getColor(v) {
                                 : colors[0];
 }
 
-$(document).ready(() => {
+$(document).ready(async () => {
     let data1 = $("#charOptProduct").data("char-opt")
     let chart1 = echarts.init(document.getElementById('echartProduct'));
     chart1.setOption(data1);
 
-    let data2 = $("#charOptCustomer").data("char-opt")
-    let chart2 = echarts.init(document.getElementById('echartCustomer'));
-    chart2.setOption(data2);
+    // let data2 = $("#charOptCustomer").data("char-opt")
+    // let chart2 = echarts.init(document.getElementById('echartCustomer'));
+    // chart2.setOption(data2);
+    let customerData = await fetch('/visual/customer')
+    let customer = await customerData.json()
+    setCusmer(customer.data)
 
     let data3 = $("#charOptNews").data("char-opt")
     let chart3 = echarts.init(document.getElementById('echartNews'));
@@ -161,10 +211,10 @@ $(document).ready(() => {
         }
         if (scroll.scrollTop + scroll.offsetHeight >= scroll.scrollHeight) {
             scroll.scrollTop = 0;
-          } else {
+        } else {
             scroll.scrollTo({
-              top: scroll.scrollTop + height + 8,
-              behavior: "smooth",
+                top: scroll.scrollTop + height + 8,
+                behavior: "smooth",
             });
         }
     }

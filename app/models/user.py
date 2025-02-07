@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import current_app, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
+from sqlalchemy.ext.hybrid import hybrid_property
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from app import login_manager, db
 from .base import BaseModel
@@ -133,6 +134,10 @@ class User(UserMixin, BaseModel):
         except:
             return None
         return User.query.get(data['id'])
+    
+    @hybrid_property
+    def role_name(self):
+        return Role.query.filter_by(id=self.role_id).first().name
 
     def confirm(self, token, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'])

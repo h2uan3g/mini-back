@@ -52,3 +52,21 @@ class Classify(BaseModel):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
         return json_product
+    
+
+class Cart(BaseModel):
+    __tablename__ = 'carts'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+
+
+class OrderItem(BaseModel):
+    __tablename__ = 'orderitems'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(50), nullable=False, default='Pending')
+    

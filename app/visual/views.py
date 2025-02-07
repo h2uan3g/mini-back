@@ -1,42 +1,19 @@
+from datetime import datetime, timedelta
 from flask import render_template
 from flask_login import login_required
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Line, Pie
+from pyecharts.charts import Bar, Pie
+from sqlalchemy import extract, func
+
+from app.models.user import User
+from app.utils.restful import ok
 from . import visual
+from app import db
 
 
 @visual.route("/")
 @login_required
 def index():
-    c_customer = (
-        Line()
-        .set_global_opts(
-            xaxis_opts=opts.AxisOpts(
-                type_="category",
-                axislabel_opts=opts.LabelOpts(color="#fff", font_size=10),
-                axisline_opts=opts.AxisLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="#fff")
-                ),
-            ),
-            yaxis_opts=opts.AxisOpts(
-                type_="value",
-                axislabel_opts=opts.LabelOpts(color="#fff"),
-                axisline_opts=opts.AxisLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="#fff")
-                ),
-            ),
-            legend_opts=opts.LegendOpts(is_show=False),
-        )
-        .add_xaxis(xaxis_data=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-        .add_yaxis(
-            series_name="",
-            y_axis=[820, 932, 901, 934, 1290, 1330, 1320],
-            symbol="emptyCircle",
-            is_symbol_show=True,
-            color="#2F51E9",
-            label_opts=opts.LabelOpts(is_show=False),
-        )
-    )
     c_product = (
         Bar()
         .set_global_opts(
@@ -72,12 +49,6 @@ def index():
             label_opts=opts.LabelOpts(is_show=False, position="center"),
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(
-                title="Customized Pie",
-                pos_left="center",
-                pos_top="20",
-                title_textstyle_opts=opts.TextStyleOpts(color="#fff"),
-            ),
             legend_opts=opts.LegendOpts(is_show=False),
         )
         .set_series_opts(
@@ -91,6 +62,27 @@ def index():
     return render_template(
         "visual/index.html",
         data1=c_product.dump_options_with_quotes(),
-        data2=c_customer.dump_options_with_quotes(),
         data3=c_news.dump_options_with_quotes(),
     )
+
+
+@visual.route("/customer")
+@login_required
+def customer():
+    now = datetime.now()
+    six_months_ago = now - timedelta(days=180)
+    result = (
+        db.session.query(
+            extract("year", User.created_at).label("year"),
+            extract("month", User.created_at).label("month"),
+            func.count(User.id).label("count"),
+        )
+        .filter(User.created_at >= six_months_ago)
+        .group_by("year", "month")
+        .order_by("year", "month")
+        .all()
+    )
+    data = [
+        {"year": item.year, "month": item.month, "count": item.count} for item in result
+    ]
+    return ok(data=data)

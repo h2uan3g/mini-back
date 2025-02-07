@@ -11,9 +11,9 @@ from flask import (
 from flask_login import login_required, login_user, logout_user, current_user
 from io import BytesIO
 from . import auth
-from .forms import LoginForm, RegistrationForm, EditProfileForm, EditProfileAdminForm
+from .forms import LoginForm, RegistrationForm, EditProfileForm
 from .. import db
-from ..decorators import admin_required, permission_required
+from ..decorators import permission_required
 from ..models import User, Role, Permission
 from ..utils import generate_image
 
@@ -241,6 +241,7 @@ def customer():
         ("row_number", "序号"),
         ("username", "昵称"),
         ("avatar_hash", "头像"),
+        ("role_name", "用户类型"),
         ("last_seen", "最近登录时间"),
     ]
     return render_template(
