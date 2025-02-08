@@ -5,7 +5,7 @@ from datetime import datetime
 
 from flask import url_for
 from flask_migrate import Migrate, upgrade
-from app import create_app, db
+from app import create_app, db, fake
 from app.models import User, Role, Permission, Product
 from app.models.document import Document
 
@@ -30,6 +30,14 @@ def deploy(name):
     if user is not None:
         user.role = Role.query.filter_by(name='Administrator').first()
         db.session.commit()
+
+@app.cli.command('fake-cli')
+@click.option("--name", default="user", help="创建用户模拟数据")
+def fake_cli(name):
+    if name == 'user':
+        fake.users(50)
+    if name == 'news':
+        fake.news(50) 
 
 
 @app.cli.command()
