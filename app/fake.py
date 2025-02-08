@@ -5,11 +5,9 @@ from app.models.resouce import News, NewsType
 from app.models.user import Role
 from . import db
 from .models import User
-
 import random
 
 
-# 测试数据
 def users(count=100):
     fake = Faker('zh_CN')
     role_list = Role.query.all()

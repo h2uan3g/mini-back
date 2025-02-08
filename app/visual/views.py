@@ -86,3 +86,25 @@ def customer():
         {"year": item.year, "month": item.month, "count": item.count} for item in result
     ]
     return ok(data=data)
+
+
+@visual.route("/news")
+@login_required
+def news():
+    now = datetime.now()
+    six_months_ago = now - timedelta(days=180)
+    result = (
+        db.session.query(
+            extract("year", User.created_at).label("year"),
+            extract("month", User.created_at).label("month"),
+            func.count(User.id).label("count"),
+        )
+        .filter(User.created_at >= six_months_ago)
+        .group_by("year", "month")
+        .order_by("year", "month")
+        .all()
+    )
+    data = [
+        {"year": item.year, "month": item.month, "count": item.count} for item in result
+    ]
+    return ok(data=data)
