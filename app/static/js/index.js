@@ -1,22 +1,26 @@
 
 
-function setCusmer(data) {
-    let xData = data.map(it => `${it.year}-${it.month}`)  
-    let yData = data.map(it => it.count)  
+async function setCusmer() {
+    let customerData = await fetch('/visual/customer')
+    let customerJson = await customerData.json()
+    let data = customerJson.data
+
+    let xData = data.map(it => `${it.year}-${it.month}`)
+    let yData = data.map(it => it.count)
     let echartCustomer = echarts.init(document.getElementById('echartCustomer'));
     echartCustomer.setOption({
         tooltip: {
-            trigger: 'item', 
-            axisPointer: {    
-                type: 'shadow'  
-                
+            trigger: 'item',
+            axisPointer: {
+                type: 'shadow'
+
             }
         },
         xAxis: {
             type: 'category',
             axisLine: {
                 lineStyle: {
-                    color: '#FFFFFF'  
+                    color: '#FFFFFF'
                 }
             },
             data: xData
@@ -25,7 +29,7 @@ function setCusmer(data) {
             show: true,
             type: 'value',
             axisLabel: {
-                color: '#FFFFFF'  
+                color: '#FFFFFF'
             },
         },
         series: [
@@ -37,11 +41,56 @@ function setCusmer(data) {
         ],
         grid: {
             top: '8%',
-            bottom: '10%',  
-            left: '8%',  
-            right: '8%'  
+            bottom: '10%',
+            left: '8%',
+            right: '8%'
         }
     });
+}
+
+async function setNews() {
+    let newsData = await fetch('/visual/news')
+    let newsJson = await newsData.json()
+    let data = newsJson.data
+    let newsContain = $('#news-list')
+    data.forEach(it => {
+        newsContain.append(`<a href="#" class="list-group-item list-group-item-action active py-3 lh-sm"
+                                aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1 title">${it.title}</strong>
+                                    <small>${it.auth}</small>
+                                </div>
+                                <div class="col-10 mb-1 small body">${it.body}</div>
+                            </a>`)
+    })
+
+    let mouseOverFlag = false;
+    $('.scroll-carousel').on('mouseover', () => {
+        mouseOverFlag = true;
+    });
+    $('.scroll-carousel').on('mouseleave', () => {
+        mouseOverFlag = false;
+    });
+    function scrollList(scroll, height) {
+        if (mouseOverFlag) {
+            return;
+        }
+        if (scroll.scrollTop + scroll.offsetHeight >= scroll.scrollHeight) {
+            scroll.scrollTop = 0;
+        } else {
+            scroll.scrollTo({
+                top: scroll.scrollTop + height + 8,
+                behavior: "smooth",
+            });
+        }
+    }
+    if (data.length > 4) {
+        setInterval(() => {
+            const scrollEl = $('.scroll-carousel')[0];
+            const itemEl = $('.scroll-carousel .list-group-item')[0];
+            scrollList(scrollEl, itemEl.offsetHeight)
+        }, 1000);
+    }
 }
 
 
@@ -64,17 +113,17 @@ function getColor(v) {
                                 : colors[0];
 }
 
+
+
 $(document).ready(async () => {
+    setCusmer()
+    setNews()
+
     let data1 = $("#charOptProduct").data("char-opt")
     let chart1 = echarts.init(document.getElementById('echartProduct'));
     chart1.setOption(data1);
 
-    // let data2 = $("#charOptCustomer").data("char-opt")
-    // let chart2 = echarts.init(document.getElementById('echartCustomer'));
-    // chart2.setOption(data2);
-    let customerData = await fetch('/visual/customer')
-    let customer = await customerData.json()
-    setCusmer(customer.data)
+
 
     let data3 = $("#charOptNews").data("char-opt")
     let chart3 = echarts.init(document.getElementById('echartNews'));
@@ -198,29 +247,7 @@ $(document).ready(async () => {
     });
 
 
-    let mouseOverFlag = false;
-    $('.scroll-carousel').on('mouseover', () => {
-        mouseOverFlag = true;
-    });
-    $('.scroll-carousel').on('mouseleave', () => {
-        mouseOverFlag = false;
-    });
-    function scrollList(scroll, height) {
-        if (mouseOverFlag) {
-            return;
-        }
-        if (scroll.scrollTop + scroll.offsetHeight >= scroll.scrollHeight) {
-            scroll.scrollTop = 0;
-        } else {
-            scroll.scrollTo({
-                top: scroll.scrollTop + height + 8,
-                behavior: "smooth",
-            });
-        }
-    }
-    setInterval(() => {
-        const scrollEl = $('.scroll-carousel')[0];
-        const itemEl = $('.scroll-carousel .list-group-item')[0];
-        scrollList(scrollEl, itemEl.offsetHeight)
-    }, 1000);
+
+
+
 })

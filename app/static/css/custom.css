@@ -324,6 +324,19 @@ body {
   border-color: transparent;
   margin-bottom: 8px;
 }
+#map-page .content .scroll-carousel .scrollarea .list-group-item .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(20vw - 120px);
+}
+#map-page .content .scroll-carousel .scrollarea .list-group-item .body {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 #map-page .content .left,
 #map-page .content .right {
   width: 20vw;

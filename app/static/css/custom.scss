@@ -381,6 +381,21 @@ body {
           background-color: rgba(66, 68, 70, 0.12);
           border-color: transparent;
           margin-bottom: 8px;
+
+          .title {
+            white-space: nowrap; 
+            overflow: hidden;  
+            text-overflow: ellipsis;  
+            max-width: calc(20vw - 120px);
+          }
+
+          .body {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
     }

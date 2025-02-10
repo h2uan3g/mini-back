@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
-from flask import render_template
+from flask import app, current_app, render_template
 from flask_login import login_required
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Pie
 from sqlalchemy import extract, func
 
+from app.models.resouce import News, NewsType
 from app.models.user import User
 from app.utils.restful import ok
 from . import visual
@@ -91,20 +92,21 @@ def customer():
 @visual.route("/news")
 @login_required
 def news():
-    now = datetime.now()
-    six_months_ago = now - timedelta(days=180)
     result = (
-        db.session.query(
-            extract("year", User.created_at).label("year"),
-            extract("month", User.created_at).label("month"),
-            func.count(User.id).label("count"),
-        )
-        .filter(User.created_at >= six_months_ago)
-        .group_by("year", "month")
-        .order_by("year", "month")
+        db.session.query(News, NewsType)
+        .join(News, News.newstype_id == NewsType.id)
+        .order_by(News.created_at.desc())
+        .limit(10)
         .all()
     )
+
     data = [
-        {"year": item.year, "month": item.month, "count": item.count} for item in result
+        {
+            "title": item[0].title,
+            "auth": item[0].auth,
+            "body": item[0].body,
+            "type": item[1].name,
+        }
+        for item in result
     ]
     return ok(data=data)
