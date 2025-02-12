@@ -29,3 +29,4 @@ DROP TABLE alembic_version;
 
 DELETE FROM news;
 DELETE FROM users;
+DELETE FROM products;

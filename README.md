@@ -17,85 +17,45 @@ mini-back
 - 合同管理
     - 文档添加水印、预览
 - 智能问答系统
-    - 智能问答 (deepseek)
+    - 智能问答 (deepseek api 接入)
 
 
 ### 系统截图
 
 
 ### 技术栈
-- flask + nginx
-- pychar
+- flask + jinjia2 + sqllite + nginx
+- echarts
 
 
-### 部署发布
-#### 使用 Systemd 管理 Gunicorn
- - `在 /etc/systemd/system/ 目录下创建一个服务文件，例如 flask_app.service`
- ```ini
-[Unit]
-Description=Gunicorn instance to serve my Flask app
-After=network.target
-
-[Service]
-User=<你的用户名>
-Group=<你的用户组>
-WorkingDirectory=/path/to/your/flask/app
-ExecStart=nohup gunicorn -c config_gunicorn.py flasky:app &
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
+### 运行
+```bash
+# touch .env 设置环境变量
+flask run -p 9001
 ```
- - `重载配置文件`
- ```bash
- sudo systemctl daemon-reload
- ```
- - `启动服务`
- ```bash
- sudo systemctl start flask_app
- ```
- - `停止服务`
- ```bash
- sudo systemctl stop flask_app
- ```
- #### nginx 配置
- ```nginx
-http {
-    ...
-    
-    upstream mini {
-        server 127.0.0.1:9000;
-        server unix:/tmp/gunicorn.sock;  # Nginx与Gunicorn之间通信的socket文件
-    }
 
-    server {
-        listen 80;
-        server_name 127.0.0.1;
-        access_log /tmp/gunicornnginx/access_log;
-        error_log /tmp/gunicornnginx/error_log;
-        location /favicon.ico {
-            root /Users/mini/static/;  # 静态文件的根目录
-        }
-
-        location ^~ /static/ {
-            root /Users/mini/;              # root  静态文件的根目录
-            # alias /Users/mini/static;     # alias  静态文件的根目录
-        }
-
-        location / {
-            proxy_pass: http://mini;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-    }
-}
- ```
-
-### 设置用户
-#### 设置超级管理员
-- 1. 变量设置邮件 (注册前设置)
-- 2. 在 flasky.py 中执行 `flask deploy --name=admin`
-
-
+### 知识星球资料分享
+1. 进群送Python、JS入门资料
+2. python 资料
+    - python原创入门笔记
+    - flask学习笔记
+        - 《Flask实战》
+    - python 精选书籍
+        - 《Python编程：从入门到实践（第2版）》
+        - 《流畅的Python（第2版）》
+        - 《Effective Python：编写高质量Python代码的90个有效方法（原书第2版）》
+        - 《Python忍者秘籍》
+        - 《编写整洁的Python代码（第2版）》
+3. 前端资料
+    - JS 原创入门笔记
+    - 前端精选书籍
+        - 《JavaScript高级程序设计（第4版）》
+        - 《JavaScript语言精髓与编程实践（第3版）》
+        - 《CSS世界》
+4. 数据库
+    - SQL 学习笔记
+    - 书籍
+        - 《SQL必知必会(第5版)》
+5. 提供技术指导
+6. 和十年行业从业者讨论行业方向
 

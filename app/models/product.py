@@ -15,7 +15,17 @@ class Product(BaseModel):
     image2 = db.Column(db.Text)
     classify_id = db.Column(db.Integer, db.ForeignKey('classifys.id'), name='fk_product_classify')
 
-    def __init__(self):
+    def __init__(self, name, introduction, price, credits, discount, image1, image2, classify_id, created_at):
+        self.name = name
+        self.introduction = introduction
+        self.price = price
+        self.credits = credits
+        self.discount = discount
+        self.image1 = image1
+        self.image2 = image2
+        self.classify_id = classify_id
+        self.created_at = created_at
+        
         if self.price is None:
             self.price = 0
         if self.discount is None:

@@ -1,5 +1,3 @@
-
-
 async function setCusmer() {
     let customerData = await fetch('/visual/customer')
     let customerJson = await customerData.json()
@@ -11,10 +9,6 @@ async function setCusmer() {
     echartCustomer.setOption({
         tooltip: {
             trigger: 'item',
-            axisPointer: {
-                type: 'shadow'
-
-            }
         },
         xAxis: {
             type: 'category',
@@ -93,42 +87,74 @@ async function setNews() {
     }
 }
 
+async function setClassify() {
+    let classifyData = await fetch('/visual/classify')
+    let classifyJson = await classifyData.json()
+    let data = classifyJson.data
 
-function getColor(v) {
-    const colors = ['#ffffe5', '#f7fcb9', '#d9f0a3', '#addd8e', '#78c679', '#41ab5d', '#238443', '#005a32'];
-    return v > 50
-        ? colors[7]
-        : v > 40
-            ? colors[6]
-            : v > 30
-                ? colors[5]
-                : v > 20
-                    ? colors[4]
-                    : v > 10
-                        ? colors[3]
-                        : v > 5
-                            ? colors[2]
-                            : v > 0
-                                ? colors[1]
-                                : colors[0];
+    let echartClassify = echarts.init(document.getElementById('echartClassify'))
+    echartClassify.setOption({
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '2%',
+            left: 'center',
+            textStyle: {
+                color: '#fff',
+                fontSize: 12
+            },
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#0A1020',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center',
+                    color: '#fff'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 20,
+                        fontWeight: 'bold'
+                    },
+                    itemStyle: {
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                data: data,
+            }
+        ],
+    })
 }
 
-
-
-$(document).ready(async () => {
-    setCusmer()
-    setNews()
-
-    let data1 = $("#charOptProduct").data("char-opt")
-    let chart1 = echarts.init(document.getElementById('echartProduct'));
-    chart1.setOption(data1);
-
-
-
-    let data3 = $("#charOptNews").data("char-opt")
-    let chart3 = echarts.init(document.getElementById('echartNews'));
-    chart3.setOption(data3);
-
+function setMap() {
+    function getColor(v) {
+        const colors = ['#ffffe5', '#f7fcb9', '#d9f0a3', '#addd8e', '#78c679', '#41ab5d', '#238443', '#005a32'];
+        return v > 50
+            ? colors[7]
+            : v > 40
+                ? colors[6]
+                : v > 30
+                    ? colors[5]
+                    : v > 20
+                        ? colors[4]
+                        : v > 10
+                            ? colors[3]
+                            : v > 5
+                                ? colors[2]
+                                : v > 0
+                                    ? colors[1]
+                                    : colors[0];
+    }
 
     const scene = new L7.Scene({
         id: 'map-container',
@@ -245,9 +271,15 @@ $(document).ready(async () => {
                 scene.addMarkerLayer(markerLayer);
             });
     });
+}
 
+$(document).ready(async () => {
+    setCusmer()
+    setNews()
+    setMap()
+    setClassify()
 
-
-
-
+    let data1 = $("#charOptProduct").data("char-opt")
+    let chart1 = echarts.init(document.getElementById('echartProduct'));
+    chart1.setOption(data1);
 })

@@ -3,7 +3,6 @@ import sys
 import click
 from datetime import datetime
 
-from flask import url_for
 from flask_migrate import Migrate, upgrade
 from app import create_app, db, fake
 from app.models import User, Role, Permission, Product
@@ -38,6 +37,9 @@ def fake_cli(name):
         fake.users(50)
     if name == 'news':
         fake.news(50) 
+    if name == 'product':
+        fake.product(50) 
+
 
 
 @app.cli.command()

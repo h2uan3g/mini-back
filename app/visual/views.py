@@ -5,6 +5,7 @@ from pyecharts import options as opts
 from pyecharts.charts import Bar, Pie
 from sqlalchemy import extract, func
 
+from app.models.product import Classify, Product
 from app.models.resouce import News, NewsType
 from app.models.user import User
 from app.utils.restful import ok
@@ -35,35 +36,11 @@ def index():
         .add_xaxis(xaxis_data=["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"])
         .add_yaxis("销售量", [5, 20, 36, 10, 75, 90], color="#2F51E9")
     )
-    x_data = ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"]
-    y_data = [335, 310, 274, 235, 400]
-    data_pair = [list(z) for z in zip(x_data, y_data)]
-    data_pair.sort(key=lambda x: x[1])
-    c_news = (
-        Pie(init_opts=opts.InitOpts())
-        .add(
-            series_name="访问来源",
-            data_pair=data_pair,
-            rosetype="radius",
-            radius="55%",
-            center=["50%", "50%"],
-            label_opts=opts.LabelOpts(is_show=False, position="center"),
-        )
-        .set_global_opts(
-            legend_opts=opts.LegendOpts(is_show=False),
-        )
-        .set_series_opts(
-            tooltip_opts=opts.TooltipOpts(
-                trigger="item", formatter="{a} <br/>{b}: {c} ({d}%)"
-            ),
-            label_opts=opts.LabelOpts(color="rgba(255, 255, 255, 0.3)"),
-        )
-    )
+
 
     return render_template(
         "visual/index.html",
         data1=c_product.dump_options_with_quotes(),
-        data3=c_news.dump_options_with_quotes(),
     )
 
 
@@ -108,5 +85,24 @@ def news():
             "type": item[1].name,
         }
         for item in result
+    ]
+    return ok(data=data)
+
+
+@visual.route("/classify")
+@login_required
+def classify():
+    query = (
+        db.session.query(
+            Classify.name.label("classify_name"),
+            func.count(Product.id).label("product_count"),
+        )
+        .join(Product)
+        .group_by(Classify.name)
+    )
+    results = query.all()
+    data = [
+        {"name": item.classify_name, "value": item.product_count}
+        for item in results
     ]
     return ok(data=data)
