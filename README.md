@@ -23,6 +23,15 @@ mini-back
 
 
 ### 系统截图
+#### 登录
+![登录](./short/login.png)
+![数据大屏](./short/bigscreen.png)
+![客户](./short/cusmer.png)
+![用户](./short/product.png)
+![问答系统](./short/chat.png)
+![积分商城](./short/mall.png)
+
+
 
 
 ### 技术栈
