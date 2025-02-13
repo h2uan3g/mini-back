@@ -167,7 +167,7 @@ def followers(username):
     page = request.args.get("page", 1, type=int)
     pagination = user.followers.paginate(
         page=page,
-        per_page=current_app.config["FLASKY_FOLLOWERS_PER_PAGE"],
+        per_page=current_app.config["MINI_FOLLOWERS_PER_PAGE"],
         error_out=False,
     )
     follows = [
@@ -210,7 +210,7 @@ def followed_by(username):
     page = request.args.get("page", 1, type=int)
     pagination = user.followed.paginate(
         page=page,
-        per_page=current_app.config["FLASKY_FOLLOWERS_PER_PAGE"],
+        per_page=current_app.config["MINI_FOLLOWERS_PER_PAGE"],
         error_out=False,
     )
     follows = [
@@ -233,7 +233,7 @@ def customer():
     page = request.args.get("page", 1, type=int)
     pagination = User.query.paginate(
         page=page,
-        per_page=current_app.config["FLASKY_COMMENTS_PER_PAGE"],
+        per_page=current_app.config["MINI_COMMENTS_PER_PAGE"],
         error_out=False,
     )
     users = pagination.items

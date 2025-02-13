@@ -6,13 +6,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    MINI_ADMIN = os.environ.get('MINI_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
-    FLASKY_POSTS_PER_PAGE = 10
-    FLASKY_FOLLOWERS_PER_PAGE = 10
-    FLASKY_COMMENTS_PER_PAGE = 10
-    FLASKY_SLOW_DB_QUERY_TIME = 0.5
+    MINI_POSTS_PER_PAGE = 10
+    MINI_FOLLOWERS_PER_PAGE = 10
+    MINI_COMMENTS_PER_PAGE = 10
+    MINI_SLOW_DB_QUERY_TIME = 0.5
     WEIXIN_APPID = os.environ.get('WEIXIN_APPID') or ''
     WEIXIN_SECRET = os.environ.get('WEIXIN_SECRET') or ''
     DEEPSEEK_APIKEY = os.environ.get('DEEPSEEK_APIKEY') or ''

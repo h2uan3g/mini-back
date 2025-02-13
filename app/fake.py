@@ -12,7 +12,7 @@ import random
 def users(count=100):
     fake = Faker("zh_CN")
     role_list = Role.query.all()
-    role_id_list = [item.id for item in role_list]
+    # role_id_list = [item.id for item in role_list]
     i = 0
     while i < count:
         u = User(
@@ -23,7 +23,7 @@ def users(count=100):
             name=fake.name(),
             location=fake.city(),
             about_me=fake.text(),
-            role_id=random.choice(role_id_list),
+            role=random.choice(role_list),
             member_since=fake.past_date(),
             created_at=fake.past_datetime(start_date=datetime(2024, 8, 2, 12, 23, 45)),
         )

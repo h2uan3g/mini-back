@@ -18,19 +18,40 @@ mini-back
     - 文档添加水印、预览
 - 智能问答系统
     - 智能问答 (deepseek api 接入)
+- 微信接口
+    - 获取微信手机号
 
 
 ### 系统截图
 
 
 ### 技术栈
-- flask + jinjia2 + sqllite + nginx
+- flask + jinjia2 + sqllite
 - echarts
+- 微信接口
 
 
 ### 运行
+1. touch .env 设置环境变量   
 ```bash
-# touch .env 设置环境变量
+# .env
+FLASK_APP=mini.py
+FLASK_DEBUG=1
+FLASKY_ADMIN=admin@example.com
+WEIXIN_APPID=xxx        # 替换
+WEIXIN_SECRET=xxx       # 替换
+DEEPSEEK_APIKEY=xxx     # 替换
+```
+
+2. 创建虚拟环境
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+3. 运行
+```bash
 flask run -p 9001
 ```
 
@@ -56,6 +77,7 @@ flask run -p 9001
     - SQL 学习笔记
     - 书籍
         - 《SQL必知必会(第5版)》
-5. 提供技术指导
+5. 线上部署技术指导
+    - gunicorn + nginx 线上部署
 6. 和十年行业从业者讨论行业方向
 

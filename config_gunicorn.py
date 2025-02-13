@@ -1,4 +1,4 @@
-# nohup gunicorn -c config_gunicorn.py flasky:app &
+# nohup gunicorn -c config_gunicorn.py mini:app &
 import multiprocessing
 
 # 是否开启debug模式
