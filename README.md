@@ -73,8 +73,6 @@ flask run -p 9001
         - 《Python编程：从入门到实践（第2版）》
         - 《流畅的Python（第2版）》
         - 《Effective Python：编写高质量Python代码的90个有效方法（原书第2版）》
-        - 《Python忍者秘籍》
-        - 《编写整洁的Python代码（第2版）》
 3. 前端资料
     - JS 原创入门笔记
     - 前端精选书籍
