@@ -68,7 +68,6 @@ flask run -p 9001
 2. python 资料
     - python原创入门笔记
     - flask学习笔记
-        - 《Flask实战》
     - python 精选书籍
         - 《Python编程：从入门到实践（第2版）》
         - 《流畅的Python（第2版）》
@@ -80,7 +79,6 @@ flask run -p 9001
         - 《JavaScript语言精髓与编程实践（第3版）》
         - 《CSS世界》
 4. 数据库
-    - SQL 学习笔记
     - 书籍
         - 《SQL必知必会(第5版)》
 5. 线上部署技术指导
