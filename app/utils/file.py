@@ -8,9 +8,6 @@ from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
 import fitz
 import pypandoc
-from docx.oxml.ns import qn
-from docx.oxml import OxmlElement
-from docx.oxml import parse_xml
 
 
 def save_file(images, pathname="UPLOAD_FOLDER"):

@@ -63,7 +63,7 @@ pip install -r requirements.txt
 flask run -p 9001
 ```
 
-### 知识星球资料分享
+### 资料分享
 1. 进群送Python、JS入门资料
 2. python 资料
     - python原创入门笔记
